@@ -1,0 +1,160 @@
+/* App-specific styles */
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Ensure full-width sections */
+section {
+  width: 100%;
+}
+
+/* Hero specific styles */
+.hero-gradient {
+  background: linear-gradient(
+    180deg,
+    rgba(22, 22, 22, 0.6) 0%,
+    rgba(22, 22, 22, 0.4) 50%,
+    rgba(22, 22, 22, 1) 100%
+  );
+}
+
+/* Animation keyframes */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Service card glow */
+.service-card-glow {
+  position: relative;
+}
+
+.service-card-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(211, 216, 218, 0.2),
+    transparent 50%,
+    rgba(211, 216, 218, 0.1)
+  );
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Project list item hover */
+.project-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.project-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(211, 216, 218, 0.05) 0%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+
+.project-item:hover::before {
+  transform: translateX(0);
+}
+
+/* Form input focus styles */
+input:focus,
+textarea:focus {
+  box-shadow: none;
+}
+
+/* Button liquid fill enhancement */
+.liquid-fill {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.liquid-fill::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: #d3d8da;
+  border-radius: 50%;
+  transform: translate(-50%, 50%);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+              height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: -1;
+}
+
+.liquid-fill:hover::before {
+  width: 300%;
+  height: 300%;
+}
+
+.liquid-fill:hover {
+  color: #161616;
+}
+
+/* Loading spinner */
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive typography adjustments */
+@media (max-width: 640px) {
+  .font-display {
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Print styles */
+@media print {
+  .grain-overlay,
+  .custom-cursor {
+    display: none !important;
+  }
+}
