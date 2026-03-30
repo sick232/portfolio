@@ -5,6 +5,7 @@ import Navigation from './sections/Navigation'
 import Hero from './sections/Hero'
 import About from './sections/About'
 import Services from './sections/Services'
+import Experience from './sections/Experience'
 import Works from './sections/Works'
 import Contact from './sections/Contact'
 import Footer from './sections/Footer'
@@ -88,6 +89,7 @@ function App() {
         <About />
         <Services />
         <Works />
+        <Experience />
         <Contact />
       </main>
       

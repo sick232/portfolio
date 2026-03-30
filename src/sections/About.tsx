@@ -52,22 +52,31 @@ const About = () => {
         }
       )
 
-      // Text content slide in
-      gsap.fromTo(textRef.current?.children || [],
-        { opacity: 0, x: -30 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: textRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none'
+      // Text content individual 3D scroll animation
+      const paragraphs = gsap.utils.toArray(textRef.current?.children || [])
+      paragraphs.forEach((p: any) => {
+        gsap.fromTo(p,
+          { 
+            opacity: 0, 
+            y: 50,
+            rotateX: -15,
+            scale: 0.95
+          },
+          {
+            opacity: 1,
+            y: 0,
+            rotateX: 0,
+            scale: 1,
+            duration: 1,
+            ease: 'back.out(1.2)',
+            scrollTrigger: {
+              trigger: p,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse'
+            }
           }
-        }
-      )
+        )
+      })
 
       // Stats counter animation
       ScrollTrigger.create({
@@ -187,7 +196,7 @@ const About = () => {
             </h2>
 
             {/* Description */}
-            <div ref={textRef} className="space-y-6 mb-12">
+            <div ref={textRef} className="space-y-6 mb-12" style={{ perspective: '1000px' }}>
               <p className="font-body text-base md:text-lg text-[#d3d8da]/70 leading-relaxed">
                 I’m a Computer Science student at VIT Chennai specializing in AI and Robotics, with a passion 
                 for artificial intelligence, machine learning, and building intelligent systems.
