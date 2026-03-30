@@ -178,7 +178,7 @@ const Hero = ({ isLoaded }: HeroProps) => {
         className="hidden lg:flex fixed left-8 top-1/2 -translate-y-1/2 flex-col gap-6 z-20"
       >
         <a
-          href="https://drive.google.com/file/d/1wO1Mkl_rgpCPQ3qUlX9hOTZ_QN7pngKv/view"
+          href="https://drive.google.com/file/d/16EyCvSjCPZb_jmmha34zEi1wj-Zh4pi5/view?usp=sharing"
           target="_blank"
           rel="noopener noreferrer"
           title="Resume"
