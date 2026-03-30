@@ -9,33 +9,36 @@ const experiences = [
     role: 'Discipline Lead',
     organization: 'Haryana Hood',
     period: 'Apr 2025 - Mar 2026 · 1 yr',
-    description: 'VIT CHENNAI',
+    location: 'VIT Chennai',  
+    description: 'Worked as discipline lead',
   },
   {
     role: 'Management Lead',
     organization: 'Linux Club',
     period: 'Jul 2024 - Mar 2026 · 1 yr 9 mos',
-    description: 'VIT CHENNAI',
+    location: 'VIT Chennai',
+    description: 'Handled management tasks',
   },
   {
     role: 'Core member- Vocalist',
-    organization: 'MUSIC CLUB',
+    organization: 'Music Club',
     period: 'Sep 2024 - Mar 2026 · 1 yr 7 mos',
-    description: 'VIT CHENNAI',
+    location: 'VIT Chennai',
+    description: 'Performed as vocalist',
   },
-  
   {
     role: 'Cadet',
     organization: 'National Cadet Corps',
     period: 'Aug 2024 - Mar 2026 · 1 yr 8 mos',
-    description: 'VIT CHENNAI',
+    location: 'VIT Chennai',
+    description: 'NCC cadet activities',
   },
-  
   {
     role: 'Editor',
     organization: 'The Short Film Club',
     period: 'Oct 2023 - Mar 2026 · 2 yrs 6 mos',
-    description: 'VIT CHENNAI',
+    location: 'VIT Chennai',
+    description: 'Edited short films',
   }
 ]
 
