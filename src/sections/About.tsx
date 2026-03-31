@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import EarthNetwork from '../components/EarthNetwork'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -133,29 +134,6 @@ const About = () => {
     return () => ctx.revert()
   }, [])
 
-  // 3D tilt effect on image
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    const x = (e.clientX - rect.left) / rect.width - 0.5
-    const y = (e.clientY - rect.top) / rect.height - 0.5
-
-    gsap.to(imageRef.current, {
-      rotateY: x * 10,
-      rotateX: -y * 10,
-      duration: 0.3,
-      ease: 'power2.out'
-    })
-  }
-
-  const handleMouseLeave = () => {
-    gsap.to(imageRef.current, {
-      rotateY: 0,
-      rotateX: 0,
-      duration: 0.5,
-      ease: 'power2.out'
-    })
-  }
-
   const splitText = (text: string) => {
     return text.split('').map((char, i) => (
       <span key={i} className="char inline-block" style={{ display: 'inline-block' }}>
@@ -248,29 +226,17 @@ const About = () => {
             </div>
           </div>
 
-          {/* Right Column - Image */}
-          <div
-            className="relative tilt-3d"
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            style={{ perspective: '1000px' }}
-          >
+          {/* Right Column - 3D Interactive Model */}
+          <div className="relative h-full min-h-[500px] flex items-center justify-center lg:mt-0 mt-8">
             <div
               ref={imageRef}
-              className="relative aspect-[2/3] rounded-lg overflow-hidden"
-              style={{ transformStyle: 'preserve-3d', clipPath: 'inset(100% 0 0 0)' }}
+              className="relative w-full h-full min-h-[500px] rounded-lg overflow-hidden flex items-center justify-center"
+              style={{ clipPath: 'inset(100% 0 0 0)' }}
             >
-              <img
-                src="/about-portrait.jpg"
-                alt="About Portrait"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#161616]/40 to-transparent" />
+              <EarthNetwork />
+              
+              <div className="absolute inset-0 bg-gradient-to-t pointer-events-none" />
             </div>
-
-            {/* Decorative Elements */}
-            <div className="absolute -bottom-6 -right-6 w-32 h-32 border border-[#d3d8da]/20 rounded-lg -z-10" />
-            <div className="absolute -top-6 -left-6 w-24 h-24 bg-[#d3d8da]/5 rounded-lg -z-10" />
           </div>
         </div>
       </div>
