@@ -10,7 +10,7 @@ export function HeroFluidBackground({ url = '/hero-portrait.jpg' }) {
   return (
     <Image
       url={url}
-      scale={[scaleX * 1.05, scaleY * 1.05, 1]}
+      scale={[scaleX * 1.05, scaleY * 1.05]}
       position={[0, 0, -2]}
     />
   );
