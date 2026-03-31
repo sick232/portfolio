@@ -18,35 +18,40 @@ const Works = () => {
       category: 'NLP / AI',
       year: '2025',
       image: '/project-pdf-intelligence.jpg',
-      description: 'NLP-based data processing pipeline with vector embeddings for PDF summarization'
+      description: 'NLP-based data processing pipeline with vector embeddings for PDF summarization',
+      githubUrl: 'https://github.com/sick232/Adobe-India-Hacathon-Connecting-the-dots-2025-Round-1B-main'
     },
     {
       title: 'MEDVISION AI',
       category: 'Healthcare AI',
       year: '2025',
       image: '/project-medvision.jpg',
-      description: 'Multilingual RAG system for surgical navigation with 3D visualization'
+      description: 'Multilingual RAG system for surgical navigation with 3D visualization',
+      githubUrl: 'https://github.com/sick232/MedVision-AI'
     },
     {
       title: 'Eco-Reserve Planner',
       category: 'Web Platform',
       year: '2025',
       image: '/project-eco-reserve.jpg',
-      description: 'Vegetation intelligence platform using Flask and spatial algorithms'
+      description: 'Vegetation intelligence platform using Flask and spatial algorithms',
+      githubUrl: 'https://github.com/sick232/EcoReserve-Planner'
     },
     {
       title: 'Smart Blind Stick',
       category: 'IoT / Assistive Tech',
       year: '2024',
       image: '/project-smart-blind-stick.jpg',
-      description: 'IoT device with ultrasonic sensors for visually impaired users'
+      description: 'IoT device with ultrasonic sensors for visually impaired users',
+      githubUrl: 'https://github.com/sick232/Smart-Blind-Stick'
     },
     {
       title: 'File Transfer System',
       category: 'Full-Stack',
       year: '2024',
       image: '/project-file-transfer.jpg',
-      description: 'Secure full-stack file transfer system with authentication protocols'
+      description: 'Secure full-stack file transfer system with authentication protocols',
+      githubUrl: 'https://github.com/sick232/File-Transfer-System'
     }
   ]
 
@@ -150,7 +155,7 @@ const Works = () => {
               onMouseLeave={() => setHoveredProject(null)}
             >
               <a
-                href="https://github.com/sick232"
+                href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex flex-col md:flex-row md:items-center justify-between py-8 md:py-10 px-4 md:px-8 -mx-4 md:-mx-8 transition-colors hover:bg-[#d3d8da]/5"
