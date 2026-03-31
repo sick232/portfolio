@@ -50,22 +50,29 @@ const Experience = () => {
   useEffect(() => {
     const ctx = gsap.context(() => {
       // Heading animation
-      gsap.fromTo(
-        headingRef.current?.children || [],
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 70%',
-            toggleActions: 'play none none none',
+      const titleElement = sectionRef.current?.querySelector('.title-scale')
+
+      if (titleElement) {
+        gsap.fromTo(titleElement,
+          { 
+            scale: 0.1, 
+            opacity: 0, 
+            y: 100 
           },
-        }
-      )
+          {
+            scale: 1,
+            opacity: 1,
+            y: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 85%',
+              end: 'top 30%',
+              scrub: 1,
+            }
+          }
+        )
+      }
 
       // List items individual 3D scroll animation
       const items = gsap.utils.toArray(itemsRef.current?.children || [])
@@ -102,7 +109,7 @@ const Experience = () => {
     <section
       id="experience"
       ref={sectionRef}
-      className="relative py-32 md:py-40 overflow-hidden"
+      className="relative py-16 md:py-24 overflow-hidden"
     >
       <div className="container-custom relative z-10 max-w-4xl mx-auto">
         {/* Section Header */}
@@ -110,7 +117,7 @@ const Experience = () => {
           <span className="font-body text-xs tracking-[0.3em] uppercase text-[#d3d8da]/50 mb-4 block">
             Clubs & Roles
           </span>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-[#d3d8da] mb-6">
+          <h2 className="title-scale font-display text-4xl md:text-5xl lg:text-6xl font-bold text-[#d3d8da] mb-6 origin-center">
             MY EXPERIENCE
           </h2>
         </div>

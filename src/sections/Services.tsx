@@ -36,21 +36,29 @@ const Services = () => {
   useEffect(() => {
     const ctx = gsap.context(() => {
       // Heading animation
-      gsap.fromTo(headingRef.current?.children || [],
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 70%',
-            toggleActions: 'play none none none'
+      const titleElement = sectionRef.current?.querySelector('.title-scale')
+
+      if (titleElement) {
+        gsap.fromTo(titleElement,
+          { 
+            scale: 0.1, 
+            opacity: 0, 
+            y: 100 
+          },
+          {
+            scale: 1,
+            opacity: 1,
+            y: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 85%',
+              end: 'top 30%',
+              scrub: 1,
+            }
           }
-        }
-      )
+        )
+      }
 
       // Cards stagger animation
       gsap.fromTo(cardsRef.current?.children || [],
@@ -87,7 +95,7 @@ const Services = () => {
     <section
       id="services"
       ref={sectionRef}
-      className="relative py-32 md:py-40 overflow-hidden"
+      className="relative py-16 md:py-24 overflow-hidden"
     >
       {/* Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#d3d8da]/5 to-transparent pointer-events-none" />
@@ -98,7 +106,7 @@ const Services = () => {
           <span className="font-body text-xs tracking-[0.3em] uppercase text-[#d3d8da]/50 mb-4 block">
             What I Do
           </span>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-[#d3d8da] mb-6">
+          <h2 className="title-scale font-display text-4xl md:text-5xl lg:text-6xl font-bold text-[#d3d8da] mb-6 origin-center">
             MY EXPERTISE
           </h2>
           <p className="font-body text-base md:text-lg text-[#d3d8da]/60 max-w-2xl mx-auto">

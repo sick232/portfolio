@@ -58,21 +58,29 @@ const Works = () => {
   useEffect(() => {
     const ctx = gsap.context(() => {
       // Heading animation
-      gsap.fromTo(headingRef.current?.children || [],
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 70%',
-            toggleActions: 'play none none none'
+      const titleElement = sectionRef.current?.querySelector('.title-scale')
+
+      if (titleElement) {
+        gsap.fromTo(titleElement,
+          { 
+            scale: 0.1, 
+            opacity: 0, 
+            y: 100 
+          },
+          {
+            scale: 1,
+            opacity: 1,
+            y: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 85%',
+              end: 'top 30%',
+              scrub: 1,
+            }
           }
-        }
-      )
+        )
+      }
 
       // Project items stagger
       gsap.fromTo(listRef.current?.children || [],
@@ -123,7 +131,7 @@ const Works = () => {
     <section
       id="works"
       ref={sectionRef}
-      className="relative py-32 md:py-40 overflow-hidden"
+      className="relative py-16 md:py-24 overflow-hidden"
       onMouseMove={handleMouseMove}
     >
       <div className="container-custom relative z-10">
@@ -133,7 +141,7 @@ const Works = () => {
             Portfolio
           </span>
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-[#d3d8da]">
+            <h2 className="title-scale font-display text-4xl md:text-5xl lg:text-6xl font-bold text-[#d3d8da] origin-center">
               SELECTED
               <br />
               <span className="text-white">WORKS</span>
