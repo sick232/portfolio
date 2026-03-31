@@ -64,7 +64,7 @@ const ParticleNetwork = () => {
 
   // Rotate constellation & react slightly to mouse position
   const { mouse } = useThree()
-  useFrame((state) => {
+  useFrame((_) => {
     if (pointsRef.current) {
       // Auto-rotation
       pointsRef.current.rotation.y -= 0.0005
@@ -84,9 +84,7 @@ const ParticleNetwork = () => {
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={positions.length / 3}
-          array={positions}
-          itemSize={3}
+          args={[positions, 3]}
         />
       </bufferGeometry>
       <pointsMaterial
