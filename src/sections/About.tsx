@@ -14,7 +14,7 @@ const About = () => {
   const [counters, setCounters] = useState({ years: 0, projects: 0 })
 
   const stats = [
-    { key: 'years', value: 12, suffix: '+', label: 'Projects Built' },
+    { key: 'years', value: 13, suffix: '+', label: 'Projects Built' },
     { key: 'projects', value: 10, suffix: '+', label: 'Tech Skills' }
   ]
 
@@ -179,11 +179,10 @@ const About = () => {
                 for artificial intelligence, machine learning, and building intelligent systems.
               </p>
               <p className="font-body text-base md:text-lg text-[#d3d8da]/70 leading-relaxed">
-                With a strong interest in solving real-world problems, my work combines full-stack development and AI, where 
-                I design and deploy end-to-end solutions using JavaScript, Python, and modern machine learning techniques.
+                Focused on solving real-world problems by combining AI and full-stack development, I enjoy turning ideas into production-ready systems.
               </p>
               <p className="font-body text-base md:text-lg text-[#d3d8da]/70 leading-relaxed">
-                I enjoy turning ideas into production-ready systems. When I’m not coding, you’ll find me playing competitive chess, staying active through 
+                When I’m not coding, you’ll find me playing competitive chess, staying active through 
                 fitness and physical training, reading non-fiction, or exploring geopolitics.
               </p>
             </div>
