@@ -289,19 +289,6 @@ const Contact = () => {
                 in AI/ML and full-stack development. Let&apos;s discuss how we can work together.
               </p>
             </div>
-
-            {/* Achievement Highlight */}
-            <div className="p-6 rounded-2xl bg-gradient-to-br from-[#d3d8da]/10 to-transparent border border-[#d3d8da]/10">
-              <span className="font-body text-xs tracking-[0.2em] uppercase text-[#d3d8da]/50 mb-2 block">
-                Achievement
-              </span>
-              <h4 className="font-display text-lg font-semibold text-[#d3d8da]">
-                Adobe India Hackathon Finalist
-              </h4>
-              <p className="font-body text-sm text-[#d3d8da]/60 mt-1">
-                Showcasing innovation in AI applications
-              </p>
-            </div>
           </div>
         </div>
       </div>

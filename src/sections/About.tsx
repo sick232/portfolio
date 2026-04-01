@@ -11,12 +11,11 @@ const About = () => {
   const headingRef = useRef<HTMLHeadingElement>(null)
   const textRef = useRef<HTMLDivElement>(null)
   const statsRef = useRef<HTMLDivElement>(null)
-  const [counters, setCounters] = useState({ years: 0, projects: 0, achievements: 0 })
+  const [counters, setCounters] = useState({ years: 0, projects: 0 })
 
   const stats = [
     { key: 'years', value: 12, suffix: '+', label: 'Projects Built' },
-    { key: 'projects', value: 10, suffix: '+', label: 'Tech Skills' },
-    { key: 'achievements', value: 1, suffix: '', label: 'Hackathon Finalist' }
+    { key: 'projects', value: 10, suffix: '+', label: 'Tech Skills' }
   ]
 
   useEffect(() => {
@@ -209,7 +208,7 @@ const About = () => {
             </div>
 
             {/* Stats */}
-            <div ref={statsRef} className="grid grid-cols-3 gap-6">
+            <div ref={statsRef} className="grid grid-cols-2 gap-6">
               {stats.map((stat) => (
                 <div
                   key={stat.key}
