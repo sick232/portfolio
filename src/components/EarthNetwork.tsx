@@ -10,7 +10,7 @@ const Globe = () => {
   // Auto-rotate the Earth
   useFrame(() => {
     if (globeRef.current) {
-      globeRef.current.rotation.y += 0.001
+      globeRef.current.rotation.y += 0.005
     }
   })
 
