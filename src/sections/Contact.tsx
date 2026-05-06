@@ -166,7 +166,8 @@ const Contact = () => {
         {
           from_name: formData.name,
           from_email: formData.email,
-          message: formData.message
+          message: formData.message,
+          time: new Date().toLocaleString()
         },
         'OfgEPt89k9rVtot_i'
       )
