@@ -1,7 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { Mail, Phone, MapPin, Send, Github, Linkedin } from 'lucide-react'
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Send,
+  Github,
+  Linkedin,
+  FileText
+} from 'lucide-react'
 import { toast } from 'sonner'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -11,18 +19,52 @@ const Contact = () => {
   const headingRef = useRef<HTMLDivElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
   const infoRef = useRef<HTMLDivElement>(null)
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' })
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  })
+
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const contactInfo = [
-    { icon: Mail, label: 'Email', value: 'piyushmaurya132@gmail.com', href: 'mailto:piyushmaurya132@gmail.com' },
-    { icon: Phone, label: 'Phone', value: '+91 9760576243', href: 'tel:+919760576243' },
-    { icon: MapPin, label: 'Location', value: 'Chennai, India', href: '#' }
+    {
+      icon: Mail,
+      label: 'Email',
+      value: 'piyushmaurya132@gmail.com',
+      href: 'mailto:piyushmaurya132@gmail.com'
+    },
+    {
+      icon: Phone,
+      label: 'Phone',
+      value: '+91 9760576243',
+      href: 'tel:+919760576243'
+    },
+    {
+      icon: MapPin,
+      label: 'Location',
+      value: 'Chennai, India',
+      href: '#'
+    }
   ]
 
   const socials = [
-    { icon: Github, href: 'https://github.com/sick232', label: 'GitHub' },
-    { icon: Linkedin, href: 'https://linkedin.com/in/piyush-maurya13', label: 'LinkedIn' }
+    {
+      icon: FileText,
+      href: 'https://drive.google.com/file/d/16EyCvSjCPZb_jmmha34zEi1wj-Zh4pi5/view',
+      label: 'Resume'
+    },
+    {
+      icon: Linkedin,
+      href: 'https://linkedin.com/in/piyush-maurya13',
+      label: 'LinkedIn'
+    },
+    {
+      icon: Github,
+      href: 'https://github.com/sick232',
+      label: 'GitHub'
+    }
   ]
 
   useEffect(() => {
@@ -31,29 +73,31 @@ const Contact = () => {
       const titleElement = sectionRef.current?.querySelector('.title-scale')
 
       if (titleElement) {
-        gsap.fromTo(titleElement,
-          { 
-            scale: 0.1, 
-            opacity: 0, 
-            y: 100 
+        gsap.fromTo(
+          titleElement,
+          {
+            scale: 0.1,
+            opacity: 0,
+            y: 100
           },
           {
             scale: 1,
             opacity: 1,
             y: 0,
-            ease: "none",
+            ease: 'none',
             scrollTrigger: {
               trigger: sectionRef.current,
               start: 'top 85%',
               end: 'top 30%',
-              scrub: 1,
+              scrub: 1
             }
           }
         )
       }
 
       // Form animation
-      gsap.fromTo(formRef.current,
+      gsap.fromTo(
+        formRef.current,
         { opacity: 0, scale: 0.95 },
         {
           opacity: 1,
@@ -68,8 +112,9 @@ const Contact = () => {
         }
       )
 
-      // Form inputs stagger
-      gsap.fromTo(formRef.current?.querySelectorAll('.form-field') || [],
+      // Form fields stagger
+      gsap.fromTo(
+        formRef.current?.querySelectorAll('.form-field') || [],
         { opacity: 0, x: -30 },
         {
           opacity: 1,
@@ -86,7 +131,8 @@ const Contact = () => {
       )
 
       // Info animation
-      gsap.fromTo(infoRef.current?.children || [],
+      gsap.fromTo(
+        infoRef.current?.children || [],
         { opacity: 0, x: 30 },
         {
           opacity: 1,
@@ -108,18 +154,27 @@ const Contact = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
     setIsSubmitting(true)
 
     // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    await new Promise((resolve) => setTimeout(resolve, 1500))
 
-    toast.success('Message sent successfully! I\'ll get back to you soon.')
-    setFormData({ name: '', email: '', message: '' })
+    toast.success("Message sent successfully! I'll get back to you soon.")
+
+    setFormData({
+      name: '',
+      email: '',
+      message: ''
+    })
+
     setIsSubmitting(false)
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value
     }))
@@ -140,12 +195,14 @@ const Contact = () => {
           <span className="font-body text-xs tracking-[0.3em] uppercase text-[#d3d8da]/50 mb-4 block">
             Get In Touch
           </span>
+
           <h2 className="title-scale font-display text-4xl md:text-5xl lg:text-7xl font-bold text-[#d3d8da] mb-6 origin-center">
             LET&apos;S <span className="text-white">TALK</span>
           </h2>
+
           <p className="font-body text-base md:text-lg text-[#d3d8da]/60 max-w-2xl mx-auto">
-            Have a project in mind or just want to say hi? I&apos;d love to hear from you. 
-            Let&apos;s create something amazing together.
+            Have a project in mind or just want to say hi? I&apos;d love to
+            hear from you. Let&apos;s create something amazing together.
           </p>
         </div>
 
@@ -157,9 +214,6 @@ const Contact = () => {
             className="space-y-6"
           >
             <div className="form-field">
-              <label htmlFor="name" className="block font-body text-sm text-[#d3d8da]/60 mb-2">
-                
-              </label>
               <input
                 type="text"
                 id="name"
@@ -173,9 +227,6 @@ const Contact = () => {
             </div>
 
             <div className="form-field">
-              <label htmlFor="email" className="block font-body text-sm text-[#d3d8da]/60 mb-2">
-               
-              </label>
               <input
                 type="email"
                 id="email"
@@ -189,9 +240,6 @@ const Contact = () => {
             </div>
 
             <div className="form-field">
-              <label htmlFor="message" className="block font-body text-sm text-[#d3d8da]/60 mb-2">
-                
-              </label>
               <textarea
                 id="message"
                 name="message"
@@ -230,8 +278,10 @@ const Contact = () => {
               <h3 className="font-display text-xl font-semibold text-[#d3d8da] mb-6">
                 Contact Information
               </h3>
+
               {contactInfo.map((item) => {
                 const Icon = item.icon
+
                 return (
                   <a
                     key={item.label}
@@ -241,10 +291,12 @@ const Contact = () => {
                     <div className="w-12 h-12 rounded-full bg-[#d3d8da]/10 flex items-center justify-center group-hover:bg-[#d3d8da]/20 transition-colors">
                       <Icon className="w-5 h-5 text-[#d3d8da]" />
                     </div>
+
                     <div>
                       <span className="block font-body text-xs text-[#d3d8da]/50 uppercase tracking-wider">
                         {item.label}
                       </span>
+
                       <span className="block font-body text-base text-[#d3d8da] group-hover:text-white transition-colors">
                         {item.value}
                       </span>
@@ -257,18 +309,20 @@ const Contact = () => {
             {/* Social Links */}
             <div className="pt-8 border-t border-[#d3d8da]/10">
               <h3 className="font-display text-xl font-semibold text-[#d3d8da] mb-6">
-                Follow Me
+                Connect With Me
               </h3>
+
               <div className="flex gap-4">
                 {socials.map((social) => {
                   const Icon = social.icon
+
                   return (
                     <a
                       key={social.label}
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-12 h-12 rounded-full bg-[#d3d8da]/10 flex items-center justify-center hover:bg-[#d3d8da] hover:text-[#161616] transition-all duration-300"
+                      className="w-12 h-12 rounded-full bg-[#d3d8da]/10 flex items-center justify-center hover:bg-[#d3d8da] hover:text-[#161616] transition-all duration-300 hover:scale-110"
                       aria-label={social.label}
                     >
                       <Icon className="w-5 h-5" />
@@ -282,11 +336,16 @@ const Contact = () => {
             <div className="p-6 rounded-2xl bg-[#d3d8da]/5 border border-[#d3d8da]/10">
               <div className="flex items-center gap-3 mb-3">
                 <span className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                <span className="font-body text-sm text-[#d3d8da]/60">Open to opportunities</span>
+
+                <span className="font-body text-sm text-[#d3d8da]/60">
+                  Open to opportunities
+                </span>
               </div>
+
               <p className="font-body text-sm text-[#d3d8da]/70">
-                I&apos;m currently looking for internships and collaboration opportunities 
-                in AI/ML and full-stack development. Let&apos;s discuss how we can work together.
+                I&apos;m currently looking for internships and collaboration
+                opportunities in AI/ML and full-stack development. Let&apos;s
+                discuss how we can work together.
               </p>
             </div>
           </div>
