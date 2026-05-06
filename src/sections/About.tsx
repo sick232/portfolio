@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { FileText } from 'lucide-react'
 import EarthNetwork from '../components/EarthNetwork'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -11,17 +12,32 @@ const About = () => {
   const headingRef = useRef<HTMLHeadingElement>(null)
   const textRef = useRef<HTMLDivElement>(null)
   const statsRef = useRef<HTMLDivElement>(null)
-  const [counters, setCounters] = useState({ years: 0, projects: 0 })
+
+  const [counters, setCounters] = useState({
+    years: 0,
+    projects: 0
+  })
 
   const stats = [
-    { key: 'years', value: 13, suffix: '+', label: 'Projects Built' },
-    { key: 'projects', value: 10, suffix: '+', label: 'Tech Skills' }
+    {
+      key: 'years',
+      value: 13,
+      suffix: '+',
+      label: 'Projects Built'
+    },
+    {
+      key: 'projects',
+      value: 10,
+      suffix: '+',
+      label: 'Tech Skills'
+    }
   ]
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Image mask reveal
-      gsap.fromTo(imageRef.current,
+      // Image reveal animation
+      gsap.fromTo(
+        imageRef.current,
         { clipPath: 'inset(100% 0 0 0)' },
         {
           clipPath: 'inset(0% 0 0 0)',
@@ -35,8 +51,9 @@ const About = () => {
         }
       )
 
-      // Heading character stagger
-      gsap.fromTo(headingRef.current?.querySelectorAll('.char') || [],
+      // Heading stagger animation
+      gsap.fromTo(
+        headingRef.current?.querySelectorAll('.char') || [],
         { y: '100%', opacity: 0 },
         {
           y: '0%',
@@ -52,12 +69,14 @@ const About = () => {
         }
       )
 
-      // Text content individual 3D scroll animation
+      // Paragraph animations
       const paragraphs = gsap.utils.toArray(textRef.current?.children || [])
+
       paragraphs.forEach((p: any) => {
-        gsap.fromTo(p,
-          { 
-            opacity: 0, 
+        gsap.fromTo(
+          p,
+          {
+            opacity: 0,
             y: 50,
             rotateX: -15,
             scale: 0.95
@@ -78,30 +97,35 @@ const About = () => {
         )
       })
 
-      // Stats counter animation
+      // Counter animation
       ScrollTrigger.create({
         trigger: statsRef.current,
         start: 'top 80%',
         onEnter: () => {
           stats.forEach((stat) => {
-            gsap.to({}, {
-              duration: 2,
-              ease: 'power2.out',
-              onUpdate: function() {
-                const progress = this.progress()
-                setCounters(prev => ({
-                  ...prev,
-                  [stat.key]: Math.floor(stat.value * progress)
-                }))
+            gsap.to(
+              {},
+              {
+                duration: 2,
+                ease: 'power2.out',
+                onUpdate: function () {
+                  const progress = this.progress()
+
+                  setCounters((prev) => ({
+                    ...prev,
+                    [stat.key]: Math.floor(stat.value * progress)
+                  }))
+                }
               }
-            })
+            )
           })
         },
         once: true
       })
 
-      // Stats scale in
-      gsap.fromTo(statsRef.current?.children || [],
+      // Stats animation
+      gsap.fromTo(
+        statsRef.current?.children || [],
         { opacity: 0, scale: 0.8 },
         {
           opacity: 1,
@@ -117,7 +141,7 @@ const About = () => {
         }
       )
 
-      // Parallax for image
+      // Parallax image effect
       gsap.to(imageRef.current, {
         y: -100,
         ease: 'none',
@@ -135,7 +159,11 @@ const About = () => {
 
   const splitText = (text: string) => {
     return text.split('').map((char, i) => (
-      <span key={i} className="char inline-block" style={{ display: 'inline-block' }}>
+      <span
+        key={i}
+        className="char inline-block"
+        style={{ display: 'inline-block' }}
+      >
         {char === ' ' ? '\u00A0' : char}
       </span>
     ))
@@ -149,7 +177,7 @@ const About = () => {
     >
       <div className="container-custom">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
-          {/* Left Column - Text Content */}
+          {/* Left Column */}
           <div className="lg:sticky lg:top-32">
             {/* Section Label */}
             <span className="font-body text-xs tracking-[0.3em] uppercase text-[#d3d8da]/50 mb-6 block">
@@ -164,26 +192,38 @@ const About = () => {
               <span className="block overflow-hidden">
                 {splitText('BUILDING')}
               </span>
+
               <span className="block overflow-hidden text-white">
                 {splitText('INTELLIGENT')}
               </span>
+
               <span className="block overflow-hidden">
                 {splitText('SYSTEMS')}
               </span>
             </h2>
 
             {/* Description */}
-            <div ref={textRef} className="space-y-6 mb-12" style={{ perspective: '1000px' }}>
+            <div
+              ref={textRef}
+              className="space-y-6 mb-12"
+              style={{ perspective: '1000px' }}
+            >
               <p className="font-body text-base md:text-lg text-[#d3d8da]/70 leading-relaxed">
-                I’m a Computer Science student at VIT Chennai specializing in AI and Robotics, with a passion 
-                for artificial intelligence, machine learning, and building intelligent systems.
+                I’m a Computer Science student at VIT Chennai specializing in AI
+                and Robotics, with a passion for artificial intelligence,
+                machine learning, and building intelligent systems.
               </p>
+
               <p className="font-body text-base md:text-lg text-[#d3d8da]/70 leading-relaxed">
-                Focused on solving real-world problems by combining AI and full-stack development, I enjoy turning ideas into production-ready systems.
+                Focused on solving real-world problems by combining AI and
+                full-stack development, I enjoy turning ideas into
+                production-ready systems.
               </p>
+
               <p className="font-body text-base md:text-lg text-[#d3d8da]/70 leading-relaxed">
-                When I’m not coding, you’ll find me playing competitive chess, staying active through 
-                fitness and physical training, reading non-fiction, or exploring geopolitics.
+                When I’m not coding, you’ll find me playing competitive chess,
+                staying active through fitness and physical training, reading
+                non-fiction, or exploring geopolitics.
               </p>
             </div>
 
@@ -192,21 +232,25 @@ const About = () => {
               <span className="font-body text-xs tracking-[0.2em] uppercase text-[#d3d8da]/50 mb-2 block">
                 Education
               </span>
+
               <h3 className="font-display text-lg font-semibold text-[#d3d8da]">
                 B.Tech in Computer Science & Engineering
               </h3>
+
               <p className="font-body text-sm text-[#d3d8da]/60">
                 AI & Robotics Specialization
               </p>
+
               <p className="font-body text-sm text-[#d3d8da]/50 mt-1">
                 Vellore Institute of Technology (VIT), Chennai
               </p>
+
               <p className="font-body text-xs text-[#d3d8da]/40 mt-1">
                 2023 - Present | Expected Graduation: August 2027
               </p>
             </div>
 
-            {/* Stats */}
+            {/* Stats + Resume */}
             <div ref={statsRef} className="grid grid-cols-2 gap-6">
               {stats.map((stat) => (
                 <div
@@ -214,17 +258,35 @@ const About = () => {
                   className="text-center p-4 rounded-lg bg-[#d3d8da]/5 hover:bg-[#d3d8da]/10 transition-colors"
                 >
                   <div className="font-display text-3xl md:text-4xl font-bold text-white mb-1 counter-scramble">
-                    {counters[stat.key as keyof typeof counters]}{stat.suffix}
+                    {counters[stat.key as keyof typeof counters]}
+                    {stat.suffix}
                   </div>
+
                   <div className="font-body text-xs text-[#d3d8da]/50 uppercase tracking-wider">
                     {stat.label}
                   </div>
                 </div>
               ))}
+
+              {/* Resume Button */}
+              <div className="col-span-2 flex justify-center mt-2">
+                <a
+                  href="https://drive.google.com/file/d/16EyCvSjCPZb_jmmha34zEi1wj-Zh4pi5/view"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-3 px-6 py-4 rounded-full bg-[#d3d8da]/10 hover:bg-[#d3d8da] text-[#d3d8da] hover:text-[#161616] transition-all duration-300 border border-[#d3d8da]/10 hover:scale-105"
+                >
+                  <FileText className="w-5 h-5 transition-transform duration-300 group-hover:rotate-6" />
+
+                  <span className="font-body text-sm tracking-wider uppercase">
+                    View Resume
+                  </span>
+                </a>
+              </div>
             </div>
           </div>
 
-          {/* Right Column - 3D Interactive Model */}
+          {/* Right Column */}
           <div className="relative h-full min-h-[500px] flex items-center justify-center lg:mt-0 mt-8">
             <div
               ref={imageRef}
@@ -232,7 +294,7 @@ const About = () => {
               style={{ clipPath: 'inset(100% 0 0 0)' }}
             >
               <EarthNetwork />
-              
+
               <div className="absolute inset-0 bg-gradient-to-t pointer-events-none" />
             </div>
           </div>
