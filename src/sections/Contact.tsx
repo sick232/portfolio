@@ -15,6 +15,11 @@ import { toast } from 'sonner'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// ENV VARIABLES
+const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID
+const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+
 const Contact = () => {
   const sectionRef = useRef<HTMLElement>(null)
   const headingRef = useRef<HTMLDivElement>(null)
@@ -70,7 +75,7 @@ const Contact = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Heading animation
+      // Heading Animation
       const titleElement =
         sectionRef.current?.querySelector('.title-scale')
 
@@ -97,7 +102,7 @@ const Contact = () => {
         )
       }
 
-      // Form animation
+      // Form Animation
       gsap.fromTo(
         formRef.current,
         { opacity: 0, scale: 0.95 },
@@ -114,7 +119,7 @@ const Contact = () => {
         }
       )
 
-      // Form fields animation
+      // Form Fields Animation
       gsap.fromTo(
         formRef.current?.querySelectorAll('.form-field') || [],
         { opacity: 0, x: -30 },
@@ -132,7 +137,7 @@ const Contact = () => {
         }
       )
 
-      // Info animation
+      // Contact Info Animation
       gsap.fromTo(
         infoRef.current?.children || [],
         { opacity: 0, x: 30 },
@@ -154,22 +159,27 @@ const Contact = () => {
     return () => ctx.revert()
   }, [])
 
+  // SEND EMAIL
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     setIsSubmitting(true)
 
+    console.log(SERVICE_ID)
+    console.log(TEMPLATE_ID)
+    console.log(PUBLIC_KEY)
+
     try {
       await emailjs.send(
-        'service_0wmy3tc',
-        'template_7u05xzg',
+        SERVICE_ID,
+        TEMPLATE_ID,
         {
           from_name: formData.name,
           from_email: formData.email,
           message: formData.message,
           time: new Date().toLocaleString()
         },
-        'OfgEPt89k9rVtot_i'
+        PUBLIC_KEY
       )
 
       toast.success('Message sent successfully!')
@@ -187,6 +197,7 @@ const Contact = () => {
     setIsSubmitting(false)
   }
 
+  // HANDLE INPUT CHANGE
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -223,12 +234,13 @@ const Contact = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
-          {/* Form */}
+          {/* CONTACT FORM */}
           <form
             ref={formRef}
             onSubmit={handleSubmit}
             className="space-y-6"
           >
+            {/* Name */}
             <div className="form-field">
               <input
                 type="text"
@@ -237,11 +249,12 @@ const Contact = () => {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-0 py-4 bg-transparent border-b border-[#d3d8da]/20 text-[#d3d8da] font-body focus:outline-none focus:border-[#d3d8da] transition-colors placeholder:text-[#d3d8da]/30"
                 placeholder="Your Name"
+                className="w-full px-0 py-4 bg-transparent border-b border-[#d3d8da]/20 text-[#d3d8da] font-body focus:outline-none focus:border-[#d3d8da] transition-colors placeholder:text-[#d3d8da]/30"
               />
             </div>
 
+            {/* Email */}
             <div className="form-field">
               <input
                 type="email"
@@ -250,11 +263,12 @@ const Contact = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-0 py-4 bg-transparent border-b border-[#d3d8da]/20 text-[#d3d8da] font-body focus:outline-none focus:border-[#d3d8da] transition-colors placeholder:text-[#d3d8da]/30"
                 placeholder="Your Email"
+                className="w-full px-0 py-4 bg-transparent border-b border-[#d3d8da]/20 text-[#d3d8da] font-body focus:outline-none focus:border-[#d3d8da] transition-colors placeholder:text-[#d3d8da]/30"
               />
             </div>
 
+            {/* Message */}
             <div className="form-field">
               <textarea
                 id="message"
@@ -263,11 +277,12 @@ const Contact = () => {
                 onChange={handleChange}
                 required
                 rows={5}
-                className="w-full px-0 py-4 bg-transparent border-b border-[#d3d8da]/20 text-[#d3d8da] font-body focus:outline-none focus:border-[#d3d8da] transition-colors resize-none placeholder:text-[#d3d8da]/30"
                 placeholder="Tell me about your project..."
+                className="w-full px-0 py-4 bg-transparent border-b border-[#d3d8da]/20 text-[#d3d8da] font-body focus:outline-none focus:border-[#d3d8da] transition-colors resize-none placeholder:text-[#d3d8da]/30"
               />
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}
@@ -287,7 +302,7 @@ const Contact = () => {
             </button>
           </form>
 
-          {/* Contact Info */}
+          {/* CONTACT INFO */}
           <div ref={infoRef} className="space-y-8">
             {/* Details */}
             <div className="space-y-6">
@@ -322,7 +337,7 @@ const Contact = () => {
               })}
             </div>
 
-            {/* Socials */}
+            {/* Social Links */}
             <div className="pt-8 border-t border-[#d3d8da]/10">
               <h3 className="font-display text-xl font-semibold text-[#d3d8da] mb-6">
                 Connect With Me
@@ -360,8 +375,8 @@ const Contact = () => {
 
               <p className="font-body text-sm text-[#d3d8da]/70">
                 I&apos;m currently looking for internships and collaboration
-                opportunities in AI/ML and full-stack development. Let&apos;s
-                discuss how we can work together.
+                opportunities in AI/ML and full-stack development.
+                Let&apos;s discuss how we can work together.
               </p>
             </div>
           </div>
