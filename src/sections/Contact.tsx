@@ -56,11 +56,7 @@ const Contact = () => {
   ]
 
   const socials = [
-    {
-      icon: FileText,
-      href: 'https://drive.google.com/file/d/16EyCvSjCPZb_jmmha34zEi1wj-Zh4pi5/view',
-      label: 'Resume'
-    },
+    
     {
       icon: Linkedin,
       href: 'https://linkedin.com/in/piyush-maurya13',
