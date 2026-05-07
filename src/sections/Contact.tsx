@@ -9,7 +9,7 @@ import {
   Send,
   Github,
   Linkedin,
-  FileText
+  
 } from 'lucide-react'
 import { toast } from 'sonner'
 
