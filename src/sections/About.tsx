@@ -216,8 +216,7 @@ const About = () => {
 
               <p className="font-body text-base md:text-lg text-[#d3d8da]/70 leading-relaxed">
                 Recently, I completed my AI & Software Engineering Internship at DEAL–DRDO, 
-                where I developed DAPS (Defence Acquisition & Procurement System)—an AI-ba
-                sed information retrieval platform for defence procurement documents.
+                where I developed DAPS (Defence Acquisition & Procurement System)—an AI-based information retrieval platform for defence procurement documents.
               </p>
 
               <p className="font-body text-base md:text-lg text-[#d3d8da]/70 leading-relaxed">
