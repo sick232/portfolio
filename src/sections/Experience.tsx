@@ -6,6 +6,13 @@ gsap.registerPlugin(ScrollTrigger)
 
 const experiences = [
   {
+  role: 'AI & Software Engineering Intern',
+  organization: 'Defence Electronics Applications Laboratory (DEAL), DRDO',
+  period: 'May 2026 - Jun 2026 · 1 mo',
+  location: 'Dehradun, Uttarakhand',
+  description: 'Developed DAPS (Defence Acquisition & Procurement System), an AI-powered defence procurement platform using FastAPI, React, BM25, and Large Language Models.',
+},
+  {
     role: 'Discipline Lead',
     organization: 'Haryana Hood',
     period: 'Apr 2025 - Mar 2026 · 1 yr',
@@ -33,13 +40,7 @@ const experiences = [
     location: 'VIT Chennai',
     description: 'NCC cadet activities',
   },
-  {
-    role: 'Editor',
-    organization: 'The Short Film Club',
-    period: 'Oct 2023 - Mar 2026 · 2 yrs 6 mos',
-    location: 'VIT Chennai',
-    description: 'Edited short films',
-  }
+  
 ]
 
 const Experience = () => {

@@ -365,14 +365,14 @@ const Contact = () => {
                 <span className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
 
                 <span className="font-body text-sm text-[#d3d8da]/60">
-                  Open to opportunities
+                  Open to Work
                 </span>
               </div>
 
               <p className="font-body text-sm text-[#d3d8da]/70">
-                I&apos;m currently looking for internships and collaboration
-                opportunities in AI/ML and full-stack development.
-                Let&apos;s discuss how we can work together.
+                Recently completed my AI & Software Engineering Internship at DEAL–DRDO. 
+                Currently seeking opportunities in Artificial Intelligence, Software Engineering,
+                 and Full-Stack Development while building impactful real-world solutions.
               </p>
             </div>
           </div>

@@ -13,8 +13,18 @@ const Works = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
 
   const projects = [
+
     {
-    title: 'Up-2-Date',
+    title: 'DAPS',
+    category: 'AI / RAG',
+    year: '2026',
+    image: '/daps.png',
+    description: 'AI-powered Defence Acquisition & Procurement System for intelligent defence procurement information retrieval using RAG, BM25, FastAPI, React, and LLMs.',
+    githubUrl: 'https://github.com/sick232/DAPS'
+  },
+
+    {
+    title: 'Up-2-Date', 
     category: 'AI / Full-Stack',
     year: '2026',
     image: '/project-up2date.jpg', 
@@ -40,14 +50,7 @@ const Works = () => {
       githubUrl: 'https://github.com/sick232/EcoReserve-Planner'
     },
     
-    {
-      title: 'Smart Blind Stick',
-      category: 'IoT / Assistive Tech',
-      year: '2024',
-      image: '/project-smart-blind-stick.jpg',
-      description: 'IoT device with ultrasonic sensors for visually impaired users',
-      githubUrl: 'https://github.com/sick232/Smart-Blind-Stick'
-    },
+    
     {
       title: 'AI-Powered PDF Intelligence Suite',
       category: 'NLP / AI',
@@ -57,13 +60,14 @@ const Works = () => {
       githubUrl: 'https://github.com/sick232/Adobe-India-Hacathon-Connecting-the-dots-2025-Round-1B-main'
     },
     {
-      title: 'File Transfer System',
-      category: 'Full-Stack',
+      title: 'Smart Blind Stick',
+      category: 'IoT / Assistive Tech',
       year: '2024',
-      image: '/project-file-transfer.jpg',
-      description: 'Secure full-stack file transfer system with authentication protocols',
-      githubUrl: 'https://github.com/sick232/File-Transfer-System'
-    }
+      image: '/project-smart-blind-stick.jpg',
+      description: 'IoT device with ultrasonic sensors for visually impaired users',
+      githubUrl: 'https://github.com/sick232/Smart-Blind-Stick'
+    },
+    
   ]
 
   useEffect(() => {

@@ -209,15 +209,15 @@ const About = () => {
               style={{ perspective: '1000px' }}
             >
               <p className="font-body text-base md:text-lg text-[#d3d8da]/70 leading-relaxed">
-                I’m a Computer Science student at VIT Chennai specializing in AI
-                and Robotics, with a passion for artificial intelligence,
-                machine learning, and building intelligent systems.
+                I am a B.Tech Computer Science student specializing in AI & Robotics at VIT Chennai. 
+                I enjoy building AI-powered applications that solve real-world problems using Machine 
+                Learning, Retrieval-Augmented Generation (RAG), and Full-Stack Development.
               </p>
 
               <p className="font-body text-base md:text-lg text-[#d3d8da]/70 leading-relaxed">
-                Focused on solving real-world problems by combining AI and
-                full-stack development, I enjoy turning ideas into
-                production-ready systems.
+                Recently, I completed my AI & Software Engineering Internship at DEAL–DRDO, 
+                where I developed DAPS (Defence Acquisition & Procurement System)—an AI-ba
+                sed information retrieval platform for defence procurement documents.
               </p>
 
               <p className="font-body text-base md:text-lg text-[#d3d8da]/70 leading-relaxed">

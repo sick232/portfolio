@@ -17,7 +17,7 @@ const Services = () => {
       icon: Brain,
       title: 'Machine Learning & AI',
       description: 'Building intelligent systems using NLP, RAG systems, and deep learning. Experienced in designing retrieval-augmented generation pipelines and optimizing inference for production-ready AI applications.',
-      skills: ['Python', 'NLP', 'RAG Systems', 'scikit-learn', 'LLMs', 'Deep Learning']
+      skills: ['Python', 'NLP', 'RAG Systems', 'LLMs', 'Deep Learning']
     },
     {
       icon: Code,
@@ -29,7 +29,7 @@ const Services = () => {
       icon: Database,
       title: 'Database & DevOps',
       description: 'Managing data systems and deployment pipelines. Skilled in database design, cloud services, and containerization for robust and scalable infrastructure.',
-      skills: ['PostgreSQL', 'MongoDB', 'Firebase', 'Docker', 'Git', 'Linux', 'ROS']
+      skills: ['PostgreSQL', 'MongoDB', 'Firebase', 'Docker', 'Git', 'Linux']
     }
   ]
 
