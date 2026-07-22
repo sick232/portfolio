@@ -270,7 +270,7 @@ const About = () => {
               {/* Resume Button */}
               <div className="col-span-2 flex justify-center mt-2">
                 <a
-                  href="https://drive.google.com/file/d/16EyCvSjCPZb_jmmha34zEi1wj-Zh4pi5/view"
+                  href="https://drive.google.com/file/d/1A7JI7g7-lLgYQf94LMT4eaGyZGUTAxgt/view?usp=drive_link"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group inline-flex items-center gap-3 px-6 py-4 rounded-full bg-[#d3d8da]/10 hover:bg-[#d3d8da] text-[#d3d8da] hover:text-[#161616] transition-all duration-300 border border-[#d3d8da]/10 hover:scale-105"
