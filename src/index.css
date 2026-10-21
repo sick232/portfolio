@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,26 +6,26 @@
 
 @layer base {
   :root {
-    --background: 0 0% 9%;
-    --foreground: 0 0% 85%;
-    --card: 0 0% 12%;
-    --card-foreground: 0 0% 85%;
-    --popover: 0 0% 12%;
-    --popover-foreground: 0 0% 85%;
-    --primary: 0 0% 85%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 85%;
-    --muted: 0 0% 20%;
-    --muted-foreground: 0 0% 60%;
-    --accent: 0 0% 20%;
-    --accent-foreground: 0 0% 85%;
+    --background: 222 22% 5%;
+    --foreground: 220 14% 92%;
+    --card: 222 20% 8%;
+    --card-foreground: 220 14% 92%;
+    --popover: 222 20% 8%;
+    --popover-foreground: 220 14% 92%;
+    --primary: 225 100% 74%;
+    --primary-foreground: 222 22% 5%;
+    --secondary: 222 16% 12%;
+    --secondary-foreground: 220 14% 92%;
+    --muted: 222 16% 14%;
+    --muted-foreground: 218 11% 62%;
+    --accent: 222 16% 14%;
+    --accent-foreground: 220 14% 92%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 0 0% 85%;
-    --radius: 0.5rem;
+    --border: 222 14% 16%;
+    --input: 222 14% 16%;
+    --ring: 225 100% 74%;
+    --radius: 0.75rem;
   }
 }
 
@@ -33,209 +33,371 @@
   * {
     @apply border-border;
   }
-  
+
   html {
-    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
   }
-  
+
+  /* Lenis smooth scrolling */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
   body {
-    @apply bg-[#161616] text-[#d3d8da] antialiased;
-    font-family: 'Inter', sans-serif;
+    @apply bg-ink-950 text-zinc-200 antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-feature-settings: 'cv11', 'ss01';
     overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
   }
-  
+
+  /* clip (not hidden) so html doesn't become a scroll container; stops sideways wobble on iOS */
+  html {
+    overflow-x: clip;
+  }
+
   ::selection {
-    background: rgba(211, 216, 218, 0.2);
+    background: rgba(122, 162, 255, 0.3);
     color: #ffffff;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand/70 ring-offset-2 ring-offset-ink-950;
   }
 }
 
 /* Typography */
 .font-display {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
+  letter-spacing: -0.035em;
 }
 
 .font-body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
-/* Custom Easing */
-.ease-custom-expo {
-  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+.font-mono {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
 }
 
-.ease-fluid-bounce {
-  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+/* Layout */
+.container-custom {
+  @apply w-full px-6 md:px-10 lg:px-16 mx-auto;
+  max-width: 1280px;
 }
 
-/* Grain Overlay */
-.grain-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+.section-padding {
+  @apply py-20 md:py-32;
 }
 
-/* Magnetic Button */
-.magnetic-button {
+/* Section eyebrow label */
+.eyebrow {
+  @apply inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-brand;
+}
+
+.eyebrow::before {
+  content: '';
+  @apply block h-px w-6 bg-brand/60;
+}
+
+/* Surfaces */
+.card-surface {
+  @apply rounded-2xl border border-white/[0.07] bg-ink-900/70;
+}
+
+.card-hover {
+  @apply transition-colors duration-300 hover:border-white/[0.14] hover:bg-ink-900;
+}
+
+/* 3D tilt card (see TiltCard.tsx) */
+.tilt-card {
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-style: preserve-3d;
 }
 
-/* Text Reveal Animation */
-.text-reveal {
-  overflow: hidden;
+/* Light beam that travels around a card's border while hovered */
+@property --beam-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
 }
 
-.text-reveal span {
-  display: inline-block;
-  transform: translateY(100%);
-  animation: textReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes textReveal {
-  to {
-    transform: translateY(0);
-  }
-}
-
-/* Char Stagger Animation */
-.char-stagger .char {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(100%) rotateX(90deg);
-  animation: charReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes charReveal {
-  to {
-    opacity: 1;
-    transform: translateY(0) rotateX(0);
-  }
-}
-
-/* Mask Reveal */
-.mask-reveal {
-  clip-path: inset(100% 0 0 0);
-  animation: maskReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes maskReveal {
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-
-/* Circular Reveal */
-.circular-reveal {
-  clip-path: circle(0% at 50% 50%);
-  animation: circularReveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes circularReveal {
-  to {
-    clip-path: circle(100% at 50% 50%);
-  }
-}
-
-/* Blur Fade In */
-.blur-fade {
-  filter: blur(10px);
-  opacity: 0;
-  animation: blurFade 0.8s ease forwards;
-}
-
-@keyframes blurFade {
-  to {
-    filter: blur(0);
-    opacity: 1;
-  }
-}
-
-/* Slide In */
-.slide-in {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.slide-in.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Scale In */
-.scale-in {
-  opacity: 0;
-  transform: scale(0.9);
-  transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.scale-in.visible {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* Hover Lift */
-.hover-lift {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
-}
-
-.hover-lift:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-/* Glow Effect */
-.glow-effect {
-  position: relative;
-}
-
-.glow-effect::before {
+.beam::before {
   content: '';
   position: absolute;
-  inset: -2px;
-  background: linear-gradient(45deg, transparent, rgba(211, 216, 218, 0.1), transparent);
+  inset: 0;
+  z-index: 1;
+  padding: 1px;
   border-radius: inherit;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--beam-angle),
+    transparent 0deg,
+    transparent 270deg,
+    rgba(122, 162, 255, 0.95) 330deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
   opacity: 0;
   transition: opacity 0.3s ease;
-  z-index: -1;
+  animation: beam-spin 2.8s linear infinite paused;
 }
 
-.glow-effect:hover::before {
-  opacity: 1;
-}
-
-/* Line Draw Animation */
-.line-draw {
-  stroke-dasharray: 1000;
-  stroke-dashoffset: 1000;
-  animation: lineDraw 2s ease forwards;
-}
-
-@keyframes lineDraw {
+@keyframes beam-spin {
   to {
-    stroke-dashoffset: 0;
+    --beam-angle: 360deg;
   }
 }
 
-/* Counter Animation */
-.counter-scramble {
-  font-variant-numeric: tabular-nums;
+/* Diagonal shine that sweeps across an image when its card is hovered */
+.shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.14) 50%, transparent 70%);
+  transform: translateX(-120%);
 }
 
-/* 3D Tilt */
-.tilt-3d {
+/* Tags that light up one after another (each sets --i to its index) */
+.chip-wave {
+  transition: color 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+  transition-delay: calc(var(--i, 0) * 45ms);
+}
+
+@media (hover: hover) {
+  .beam:hover::before {
+    opacity: 1;
+    animation-play-state: running;
+  }
+
+  .group:hover .shine::after {
+    transform: translateX(120%);
+    transition: transform 0.9s ease;
+  }
+
+  .group:hover .chip-wave {
+    color: #fff;
+    border-color: rgba(122, 162, 255, 0.4);
+    background-color: rgba(122, 162, 255, 0.1);
+  }
+}
+
+/* Children of a tilt card lifted toward the viewer, so they separate in depth as the card tilts */
+.depth-1 {
+  transform: translateZ(14px);
+}
+
+.depth-2 {
+  transform: translateZ(28px);
+}
+
+/* Hero name letters start hidden; GSAP flips them in on load (see Hero.tsx) */
+.hero-char {
+  opacity: 0;
+}
+
+/* 3D flip stat (hero highlights): hover on desktop, tap on touch screens */
+.flip-card {
+  perspective: 600px;
+}
+
+.flip-inner {
+  position: relative;
+  display: block;
+  width: 100%;
   transform-style: preserve-3d;
-  perspective: 1000px;
+  transition: transform 0.7s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.flip-face {
+  display: block;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.flip-back {
+  position: absolute;
+  inset: 0;
+  transform: rotateX(180deg);
+}
+
+.flip-card.is-flipped .flip-inner {
+  transform: rotateX(180deg);
+}
+
+@media (hover: hover) {
+  .flip-card:hover .flip-inner {
+    transform: rotateX(180deg);
+  }
+}
+
+/* Tilted orbit rings around the hero globe; the satellite rides the ring as it spins */
+.orbit {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1px solid rgba(122, 162, 255, 0.18);
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.orbit-spin {
+  position: absolute;
+  inset: 0;
+  animation: orbit-spin 14s linear infinite;
+}
+
+.orbit-dot {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 9999px;
+  background: #9db9ff;
+  box-shadow: 0 0 14px 3px rgba(122, 162, 255, 0.7);
+}
+
+.orbit-dot-sm {
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  background: #34d399;
+  box-shadow: 0 0 12px 2px rgba(52, 211, 153, 0.6);
+}
+
+@keyframes orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Hero loops stop while the hero is scrolled out of view (class set in Hero.tsx) */
+.is-offscreen *,
+.is-offscreen *::before {
+  animation-play-state: paused !important;
+}
+
+.tilt-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(
+    500px circle at var(--glare-x, 50%) var(--glare-y, 50%),
+    rgba(122, 162, 255, 0.12),
+    transparent 45%
+  );
+}
+
+/* Only on devices with a real hover, so the glare doesn't stick after a tap on phones */
+@media (hover: hover) {
+  .tilt-card:hover .tilt-glare {
+    opacity: 1;
+  }
+}
+
+/* Receding 3D grid floor at the bottom of the hero.
+   The lines are moved with transform (GPU-composited) rather than background-position, which would repaint every frame. */
+.grid-floor {
+  position: absolute;
+  left: -50%;
+  right: -50%;
+  bottom: 0;
+  height: 55%;
+  overflow: hidden;
+  transform: perspective(500px) rotateX(68deg);
+  transform-origin: center bottom;
+}
+
+.grid-floor::before {
+  content: '';
+  position: absolute;
+  inset: -64px 0 0 0;
+  background-image:
+    linear-gradient(to right, rgba(122, 162, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(122, 162, 255, 0.1) 1px, transparent 1px);
+  background-size: 64px 64px;
+  will-change: transform;
+  animation: grid-scroll 4s linear infinite;
+}
+
+/* Fades the floor out toward the horizon */
+.grid-floor-fade {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 55%;
+  background: linear-gradient(to bottom, #0a0c10 0%, rgba(10, 12, 16, 0.6) 45%, transparent 100%);
+}
+
+@keyframes grid-scroll {
+  to {
+    transform: translateY(64px);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Buttons */
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-medium text-ink-950 transition-all duration-200 hover:bg-brand-light hover:shadow-[0_0_0_4px_rgba(122,162,255,0.15)];
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-6 py-3 text-sm font-medium text-zinc-200 transition-all duration-200 hover:border-white/25 hover:bg-white/[0.06] hover:text-white;
+}
+
+.chip {
+  @apply inline-flex items-center rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1 text-xs text-zinc-300;
+}
+
+/* Background grid used behind the hero */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 40%, transparent 100%);
+}
+
+/* Scroll reveal (driven by GSAP in App.tsx) */
+.slide-in {
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
+
+.slide-in.is-visible {
+  opacity: 1;
 }
 
 /* Scrollbar Styling */
@@ -244,16 +406,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #161616;
+  background: #0a0c10;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333;
+  background: #262b36;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #444;
+  background: #343a48;
 }
 
 /* Reduced Motion */
@@ -265,95 +427,10 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
 
-/* Custom Cursor */
-.custom-cursor {
-  position: fixed;
-  width: 20px;
-  height: 20px;
-  border: 1px solid rgba(211, 216, 218, 0.5);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 10000;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s, border-color 0.2s;
-  mix-blend-mode: difference;
-}
-
-.custom-cursor.hover {
-  width: 60px;
-  height: 60px;
-  border-color: rgba(211, 216, 218, 0.8);
-}
-
-/* Navigation */
-.nav-hidden {
-  transform: translateY(-100%);
-}
-
-.nav-visible {
-  transform: translateY(0);
-}
-
-/* Section Spacing */
-.section-padding {
-  @apply py-20 md:py-32 lg:py-40;
-}
-
-/* Container */
-.container-custom {
-  @apply w-full px-6 md:px-12 lg:px-20 xl:px-32 mx-auto;
-  max-width: 1600px;
-}
-
-/* Image Hover Effect */
-.image-hover-zoom {
-  overflow: hidden;
-}
-
-.image-hover-zoom img {
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.image-hover-zoom:hover img {
-  transform: scale(1.05);
-}
-
-/* Glass Effect */
-.glass {
-  background: rgba(22, 22, 22, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(211, 216, 218, 0.1);
-}
-
-/* Liquid Button Fill */
-.liquid-fill {
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-}
-
-.liquid-fill::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 0;
-  height: 0;
-  background: #d3d8da;
-  border-radius: 50%;
-  transform: translate(-50%, 50%);
-  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: -1;
-}
-
-.liquid-fill:hover::before {
-  width: 300%;
-  height: 300%;
-}
-
-.liquid-fill:hover {
-  color: #161616;
+  .slide-in,
+  .hero-char {
+    opacity: 1;
+    transform: none;
+  }
 }

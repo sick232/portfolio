@@ -1,4 +1,4 @@
-import { useRef, useMemo, Suspense } from 'react'
+import { useEffect, useRef, useMemo, useState, Suspense } from 'react'
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber'
 import { OrbitControls, Sphere } from '@react-three/drei'
 import * as THREE from 'three'
@@ -7,10 +7,11 @@ import * as THREE from 'three'
 const Globe = () => {
   const globeRef = useRef<THREE.Mesh>(null)
 
-  // Auto-rotate the Earth
-  useFrame(() => {
+  // Auto-rotate the Earth at a constant angular speed (radians/sec), independent of frame rate.
+  // Delta is clamped so a dropped frame or a background tab doesn't cause a visible jump.
+  useFrame((_, delta) => {
     if (globeRef.current) {
-      globeRef.current.rotation.y += 0.005
+      globeRef.current.rotation.y += Math.min(delta, 0.05) * 0.3
     }
   })
 
@@ -18,7 +19,7 @@ const Globe = () => {
   const map = useLoader(THREE.TextureLoader, 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_lights_2048.png')
 
   return (
-    <group>
+    <group scale={1.15}>
       {/* Black solid core */}
       <Sphere args={[1.98, 32, 32]}>
         <meshBasicMaterial color="#000000" />
@@ -53,7 +54,7 @@ const ParticleNetwork = () => {
     for (let i = 0; i < particlesCount; i++) {
       const theta = Math.random() * 2 * Math.PI
       const phi = Math.acos(Math.random() * 2 - 1)
-      const radius = 2.2 + Math.random() * 1.5 // Distance from globe
+      const radius = 2.5 + Math.random() * 1.4 // Distance from globe
 
       pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta)
       pos[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta)
@@ -100,10 +101,35 @@ const ParticleNetwork = () => {
 
 // 3. Main Scene Container
 export default function EarthNetwork() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [inView, setInView] = useState(true)
+  // On touch screens, dragging must scroll the page rather than spin the globe
+  const [isTouch] = useState(() => window.matchMedia('(pointer: coarse)').matches)
+
+  // Stop rendering the WebGL scene while it is scrolled off screen
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting))
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <div className="absolute inset-0 w-full h-full bg-transparent cursor-grab active:cursor-grabbing">
-      <Canvas camera={{ position: [0, 0, 8], fov: 60 }}>
-        <fog attach="fog" args={['#161616', 4.2, 12]} />
+    <div
+      ref={containerRef}
+      className={`absolute inset-0 w-full h-full bg-transparent rounded-full ${
+        isTouch ? '' : 'cursor-grab active:cursor-grabbing'
+      }`}
+    >
+      <Canvas
+        camera={{ position: [0, 0, 8], fov: 60 }}
+        dpr={isTouch ? [1, 1.25] : [1, 1.5]}
+        style={{ touchAction: 'pan-y' }}
+        frameloop={inView ? 'always' : 'never'}
+        gl={{ antialias: true, powerPreference: 'high-performance' }}
+      >
+        <fog attach="fog" args={['#0a0c10', 5.5, 14]} />
         <ambientLight intensity={0.5} />
         
         <Suspense fallback={null}>
@@ -111,14 +137,15 @@ export default function EarthNetwork() {
         </Suspense>
         <ParticleNetwork />
         
-        {/* Allows user to drag/rotate the globe with their mouse */}
-        <OrbitControls 
-          enableZoom={false} 
-          enablePan={false} 
-          rotateSpeed={0.5}
-          autoRotate={true}
-          autoRotateSpeed={0.5}
-        />
+        {/* Allows user to drag/rotate the globe with their mouse (desktop only) */}
+        {!isTouch && (
+          <OrbitControls
+            enableZoom={false}
+            enablePan={false}
+            rotateSpeed={0.5}
+            enableDamping={false}
+          />
+        )}
       </Canvas>
     </div>
   )

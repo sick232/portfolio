@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { Toaster } from 'sonner'
 import Navigation from './sections/Navigation'
 import Hero from './sections/Hero'
 import About from './sections/About'
@@ -9,92 +10,73 @@ import Experience from './sections/Experience'
 import Works from './sections/Works'
 import Contact from './sections/Contact'
 import Footer from './sections/Footer'
-import CustomCursor from './components/CustomCursor'
+import { initSmoothScroll } from './lib/smoothScroll'
 import './App.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
 function App() {
-  const [isLoaded, setIsLoaded] = useState(false)
   const mainRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    // Initial load animation
-    const timer = setTimeout(() => {
-      setIsLoaded(true)
-    }, 100)
+  useEffect(() => initSmoothScroll(), [])
 
-    return () => clearTimeout(timer)
+  useEffect(() => {
+    const root = mainRef.current
+    if (!root) return
+
+    // Fade in every element marked .slide-in as it enters the viewport (opacity only, so
+    // content stays where the scroll puts it). The fade itself is a CSS transition on .is-visible.
+    const reveal = (el: Element) => el.classList.add('is-visible')
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      root.querySelectorAll('.slide-in').forEach(reveal)
+      return
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        let order = 0
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          const el = entry.target as HTMLElement
+          // Small stagger when several elements enter together
+          el.style.transitionDelay = `${Math.min(order++, 6) * 50}ms`
+          reveal(el)
+          io.unobserve(el)
+        })
+      },
+      { rootMargin: '0px 0px -5% 0px' }
+    )
+
+    // Watch for .slide-in elements added or re-classed later (new content, filters, hot reload),
+    // so nothing gets stuck invisible because it wasn't in the DOM on first load
+    const observeAll = () =>
+      root.querySelectorAll('.slide-in:not(.is-visible)').forEach((el) => io.observe(el))
+    observeAll()
+    const mo = new MutationObserver(observeAll)
+    mo.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] })
+
+    return () => {
+      io.disconnect()
+      mo.disconnect()
+    }
   }, [])
 
-  useEffect(() => {
-    if (!isLoaded) return
-
-    // Initialize scroll-triggered animations
-    const ctx = gsap.context(() => {
-      // Slide in animations for sections
-      gsap.utils.toArray<HTMLElement>('.slide-in').forEach((el) => {
-        gsap.fromTo(el,
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: el,
-              start: 'top 85%',
-              toggleActions: 'play none none none'
-            }
-          }
-        )
-      })
-
-      // Scale in animations
-      gsap.utils.toArray<HTMLElement>('.scale-in').forEach((el) => {
-        gsap.fromTo(el,
-          { opacity: 0, scale: 0.9 },
-          {
-            opacity: 1,
-            scale: 1,
-            duration: 0.8,
-            ease: 'back.out(1.7)',
-            scrollTrigger: {
-              trigger: el,
-              start: 'top 85%',
-              toggleActions: 'play none none none'
-            }
-          }
-        )
-      })
-    }, mainRef)
-
-    return () => ctx.revert()
-  }, [isLoaded])
-
   return (
-    <div ref={mainRef} className="relative min-h-screen bg-[#161616]">
-      {/* Grain Overlay */}
-      <div className="grain-overlay" />
-      
-      {/* Custom Cursor */}
-      <CustomCursor />
-      
-      {/* Navigation */}
+    <div ref={mainRef} className="relative min-h-screen bg-ink-950">
       <Navigation />
-      
-      {/* Main Content */}
+
       <main>
-        <Hero isLoaded={isLoaded} />
+        <Hero />
         <About />
         <Services />
         <Works />
         <Experience />
         <Contact />
       </main>
-      
-      {/* Footer */}
+
       <Footer />
+
+      <Toaster theme="dark" position="bottom-right" richColors />
     </div>
   )
 }

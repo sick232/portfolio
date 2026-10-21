@@ -1,79 +1,61 @@
-import { ArrowUp } from 'lucide-react'
+import { ArrowUp, Github, Linkedin, Mail } from 'lucide-react'
+import { navLinks, profile } from '../data/profile'
+import { scrollToSection, scrollToTop } from '../lib/smoothScroll'
 
 const Footer = () => {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="relative py-12 md:py-16 border-t border-[#d3d8da]/10">
-      <div className="container-custom">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          {/* Logo & Copyright */}
-          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
-            <span className="font-display text-xl font-bold text-[#d3d8da]">
-              PIYUSH MAURYA
-            </span>
-            <span className="font-body text-sm text-[#d3d8da]/50">
-              &copy; {currentYear} Piyush Maurya. All rights reserved.
-            </span>
-          </div>
+    <footer className="border-t border-white/[0.06] py-10">
+      <div className="container-custom flex flex-col items-center justify-between gap-6 md:flex-row">
+        <div className="flex items-center gap-3">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-brand/30 bg-brand/10 font-mono text-xs text-brand">
+            {profile.initials}
+          </span>
+          <span className="text-sm text-zinc-500">
+            &copy; {currentYear} {profile.name}
+          </span>
+        </div>
 
-          {/* Quick Links */}
-          <div className="flex items-center gap-6">
+        <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+          {navLinks.map((link) => (
             <a
-              href="#about"
+              key={link.name}
+              href={link.href}
               onClick={(e) => {
                 e.preventDefault()
-                document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' })
+                scrollToSection(link.href)
               }}
-              className="font-body text-sm text-[#d3d8da]/60 hover:text-[#d3d8da] transition-colors"
+              className="text-sm text-zinc-500 transition-colors hover:text-zinc-200"
             >
-              About
+              {link.name}
             </a>
-            <a
-              href="#services"
-              onClick={(e) => {
-                e.preventDefault()
-                document.querySelector('#services')?.scrollIntoView({ behavior: 'smooth' })
-              }}
-              className="font-body text-sm text-[#d3d8da]/60 hover:text-[#d3d8da] transition-colors"
-            >
-              Experties
-            </a>
-            <a
-              href="#works"
-              onClick={(e) => {
-                e.preventDefault()
-                document.querySelector('#works')?.scrollIntoView({ behavior: 'smooth' })
-              }}
-              className="font-body text-sm text-[#d3d8da]/60 hover:text-[#d3d8da] transition-colors"
-            >
-              Works
-            </a>
-            <a
-              href="#contact"
-              onClick={(e) => {
-                e.preventDefault()
-                document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })
-              }}
-              className="font-body text-sm text-[#d3d8da]/60 hover:text-[#d3d8da] transition-colors"
-            >
-              Contact
-            </a>
-          </div>
+          ))}
+        </nav>
 
-          {/* Back to Top */}
+        <div className="flex items-center gap-2">
+          {[
+            { icon: Github, href: profile.githubUrl, label: 'GitHub' },
+            { icon: Linkedin, href: profile.linkedinUrl, label: 'LinkedIn' },
+            { icon: Mail, href: `mailto:${profile.email}`, label: 'Email' }
+          ].map(({ icon: Icon, href, label }) => (
+            <a
+              key={label}
+              href={href}
+              target={href.startsWith('http') ? '_blank' : undefined}
+              rel="noopener noreferrer"
+              aria-label={label}
+              className="flex h-9 w-9 items-center justify-center rounded-full text-zinc-500 transition-colors hover:bg-white/5 hover:text-white"
+            >
+              <Icon className="h-4 w-4" />
+            </a>
+          ))}
           <button
             onClick={scrollToTop}
-            className="group flex items-center gap-2 font-body text-sm text-[#d3d8da]/60 hover:text-[#d3d8da] transition-colors"
+            aria-label="Back to top"
+            className="ml-2 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-zinc-400 transition-colors hover:border-white/25 hover:text-white"
           >
-            Back to top
-            <span className="w-8 h-8 rounded-full border border-[#d3d8da]/30 flex items-center justify-center group-hover:border-[#d3d8da] group-hover:bg-[#d3d8da] group-hover:text-[#161616] transition-all">
-              <ArrowUp className="w-4 h-4" />
-            </span>
+            <ArrowUp className="h-4 w-4" />
           </button>
         </div>
       </div>

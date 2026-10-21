@@ -1,166 +1,95 @@
-import { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { Briefcase, MapPin } from 'lucide-react'
+import TiltCard from '../components/TiltCard'
 
-gsap.registerPlugin(ScrollTrigger)
-
-const experiences = [
-  {
+const work = {
   role: 'AI & Software Engineering Intern',
   organization: 'Defence Electronics Applications Laboratory (DEAL), DRDO',
-  period: 'May 2026 - Jun 2026 · 1 mo',
+  period: 'May 2026 – Jun 2026',
   location: 'Dehradun, Uttarakhand',
-  description: 'Developed DAPS (Defence Acquisition & Procurement System), an AI-powered defence procurement platform using FastAPI, React, BM25, and Large Language Models.',
-},
-  {
-    role: 'Discipline Lead',
-    organization: 'Haryana Hood',
-    period: 'Apr 2025 - Mar 2026 · 1 yr',
-    location: 'VIT Chennai',  
-    description: 'Worked as discipline lead',
-  },
-  {
-    role: 'Management Lead',
-    organization: 'Linux Club',
-    period: 'Jul 2024 - Mar 2026 · 1 yr 9 mos',
-    location: 'VIT Chennai',
-    description: 'Handled management tasks',
-  },
-  {
-    role: 'Core member- Vocalist',
-    organization: 'Music Club',
-    period: 'Sep 2024 - Mar 2026 · 1 yr 7 mos',
-    location: 'VIT Chennai',
-    description: 'Performed as vocalist',
-  },
-  {
-    role: 'Cadet',
-    organization: 'National Cadet Corps',
-    period: 'Aug 2024 - Mar 2026 · 1 yr 8 mos',
-    location: 'VIT Chennai',
-    description: 'NCC cadet activities',
-  },
-  
+  points: [
+    'Developed DAPS (Defence Acquisition & Procurement System), an AI-powered platform for information retrieval over defence procurement documents.',
+    'Built the retrieval pipeline combining BM25 search with Large Language Models for retrieval-augmented answers.',
+    'Implemented the FastAPI backend and React frontend for the platform.'
+  ],
+  stack: ['Python', 'FastAPI', 'React', 'BM25', 'LLMs', 'RAG']
+}
+
+const leadership = [
+  { role: 'Management Lead', organization: 'Linux Club, VIT Chennai', period: 'Jul 2024 – Mar 2026' },
+  { role: 'Discipline Lead', organization: 'Haryana Hood, VIT Chennai', period: 'Apr 2025 – Mar 2026' },
+  { role: 'Cadet', organization: 'National Cadet Corps', period: 'Aug 2024 – Mar 2026' },
+  { role: 'Core Member — Vocalist', organization: 'Music Club, VIT Chennai', period: 'Sep 2024 – Mar 2026' }
 ]
 
 const Experience = () => {
-  const sectionRef = useRef<HTMLElement>(null)
-  const headingRef = useRef<HTMLDivElement>(null)
-  const itemsRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Heading animation
-      const titleElement = sectionRef.current?.querySelector('.title-scale')
-
-      if (titleElement) {
-        gsap.fromTo(titleElement,
-          { 
-            scale: 0.1, 
-            opacity: 0, 
-            y: 100 
-          },
-          {
-            scale: 1,
-            opacity: 1,
-            y: 0,
-            ease: "none",
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 85%',
-              end: 'top 30%',
-              scrub: 1,
-            }
-          }
-        )
-      }
-
-      // List items individual 3D scroll animation
-      const items = gsap.utils.toArray(itemsRef.current?.children || [])
-      items.forEach((item: any) => {
-        gsap.fromTo(
-          item,
-          { 
-            opacity: 0, 
-            y: 50,
-            rotateX: -15,
-            scale: 0.95
-          },
-          {
-            opacity: 1,
-            y: 0,
-            rotateX: 0,
-            scale: 1,
-            duration: 1,
-            ease: 'back.out(1.2)',
-            scrollTrigger: {
-              trigger: item,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        )
-      })
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
-
   return (
-    <section
-      id="experience"
-      ref={sectionRef}
-      className="relative py-16 md:py-24 overflow-hidden"
-    >
-      <div className="container-custom relative z-10 max-w-4xl mx-auto">
-        {/* Section Header */}
-        <div ref={headingRef} className="text-center mb-16 md:mb-24">
-          <span className="font-body text-xs tracking-[0.3em] uppercase text-[#d3d8da]/50 mb-4 block">
-            Clubs & Roles
-          </span>
-          <h2 className="title-scale font-display text-4xl md:text-5xl lg:text-6xl font-bold text-[#d3d8da] mb-6 origin-center">
-            MY EXPERIENCE
+    <section id="experience" className="section-padding relative border-y border-white/[0.05] bg-ink-900/40">
+      <div className="container-custom">
+        <div className="mb-14 max-w-2xl">
+          <span className="eyebrow slide-in">Experience</span>
+          <h2 className="slide-in mt-5 font-display text-4xl font-bold text-white md:text-5xl">
+            Where I&apos;ve worked
           </h2>
         </div>
 
-        {/* Experience List */}
-        <div ref={itemsRef} className="space-y-6" style={{ perspective: '1000px' }}>
-          {experiences.map((exp, index) => (
-            <div
-              key={index}
-              className="relative p-6 md:p-8 rounded-2xl bg-[#1a1a1a] border border-[#d3d8da]/10 overflow-hidden transition-all duration-300 hover:border-[#d3d8da]/30 hover:-translate-y-1 group"
-            >
-              <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-                <div>
-                  <h3 className="font-display text-xl md:text-2xl font-semibold text-[#d3d8da] mb-1">
-                    {exp.role}
-                  </h3>
-                  <div className="font-body text-base md:text-lg text-[#d3d8da]/80 mb-2">
-                    {exp.organization}
-                  </div>
-                  {exp.description && (
-                    <p className="font-body text-sm md:text-base text-[#d3d8da]/60">
-                      {exp.description}
-                    </p>
-                  )}
-                  {exp.location && (
-                    <p className="font-body text-sm md:text-base text-[#d3d8da]/50 mt-1">
-                      {exp.location}
-                    </p>
-                  )}
-                </div>
-                
-                <div className="shrink-0 flex items-center md:items-start">
-                  <span className="px-3 py-1 text-xs font-body text-[#d3d8da]/70 bg-[#d3d8da]/10 rounded-full border border-[#d3d8da]/5">
-                    {exp.period}
+        {/* Professional experience */}
+        <article className="card-surface slide-in relative overflow-hidden p-7 md:p-10">
+          <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-brand to-brand/0" />
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div className="flex gap-4">
+              <div className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-brand/20 bg-brand/10 text-brand sm:flex">
+                <Briefcase className="h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="font-display text-xl font-semibold text-white md:text-2xl">
+                  {work.role}
+                </h3>
+                <p className="mt-1 text-zinc-300">{work.organization}</p>
+                <p className="mt-2 inline-flex items-center gap-1.5 text-sm text-zinc-500">
+                  <MapPin className="h-3.5 w-3.5" />
+                  {work.location}
+                </p>
+              </div>
+            </div>
+            <span className="self-start rounded-full border border-white/[0.08] bg-white/[0.03] px-3.5 py-1 font-mono text-xs text-zinc-400">
+              {work.period}
+            </span>
+          </div>
+
+          <ul className="mt-7 space-y-3 sm:pl-16">
+            {work.points.map((point) => (
+              <li key={point} className="flex gap-3 text-[15px] leading-relaxed text-zinc-400">
+                <span className="mt-2.5 h-1 w-1 shrink-0 rounded-full bg-brand" />
+                {point}
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-7 flex flex-wrap gap-2 sm:pl-16">
+            {work.stack.map((tech) => (
+              <span key={tech} className="chip">
+                {tech}
+              </span>
+            ))}
+          </div>
+        </article>
+
+        {/* Leadership */}
+        <h3 className="slide-in mt-16 mb-6 font-mono text-xs uppercase tracking-[0.2em] text-zinc-500">
+          Leadership & Activities
+        </h3>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {leadership.map((item) => (
+            <div key={item.role + item.organization} className="slide-in">
+              <TiltCard maxTilt={6} className="card-surface card-hover flex h-full flex-col gap-1 p-6">
+                <div className="depth-2 flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                  <h4 className="font-display text-lg font-semibold text-white">{item.role}</h4>
+                  <span className="shrink-0 font-mono text-[11px] text-zinc-500 sm:pt-1">
+                    {item.period}
                   </span>
                 </div>
-              </div>
-
-              {/* Glass Edge Effect */}
-              <div className="absolute inset-0 rounded-2xl pointer-events-none">
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#d3d8da]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              </div>
+                <p className="depth-1 text-sm text-zinc-400">{item.organization}</p>
+              </TiltCard>
             </div>
           ))}
         </div>

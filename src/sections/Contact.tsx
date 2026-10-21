@@ -1,31 +1,29 @@
-import { useEffect, useRef, useState } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useState } from 'react'
 import emailjs from '@emailjs/browser'
-import {
-  Mail,
-  Phone,
-  MapPin,
-  Send,
-  Github,
-  Linkedin,
-  
-} from 'lucide-react'
+import { Mail, Phone, MapPin, Send, Github, Linkedin, ArrowUpRight } from 'lucide-react'
 import { toast } from 'sonner'
-
-gsap.registerPlugin(ScrollTrigger)
+import { profile } from '../data/profile'
 
 // ENV VARIABLES
 const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID
 const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
 const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
 
-const Contact = () => {
-  const sectionRef = useRef<HTMLElement>(null)
-  const headingRef = useRef<HTMLDivElement>(null)
-  const formRef = useRef<HTMLFormElement>(null)
-  const infoRef = useRef<HTMLDivElement>(null)
+const contactInfo = [
+  { icon: Mail, label: 'Email', value: profile.email, href: `mailto:${profile.email}` },
+  { icon: Phone, label: 'Phone', value: profile.phone, href: `tel:${profile.phone.replace(/\s/g, '')}` },
+  { icon: MapPin, label: 'Location', value: profile.location }
+]
 
+const socials = [
+  { icon: Linkedin, href: profile.linkedinUrl, label: 'LinkedIn' },
+  { icon: Github, href: profile.githubUrl, label: 'GitHub' }
+]
+
+const inputClass =
+  'w-full rounded-xl border border-white/[0.08] bg-ink-950/60 px-4 py-3 text-base text-zinc-100 placeholder:text-zinc-600 sm:text-sm transition-colors focus:border-brand/60 focus:outline-none focus:ring-0'
+
+const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -34,136 +32,11 @@ const Contact = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const contactInfo = [
-    {
-      icon: Mail,
-      label: 'Email',
-      value: 'piyushmaurya132@gmail.com',
-      href: 'mailto:piyushmaurya132@gmail.com'
-    },
-    {
-      icon: Phone,
-      label: 'Phone',
-      value: '+91 9760576243',
-      href: 'tel:+919760576243'
-    },
-    {
-      icon: MapPin,
-      label: 'Location',
-      value: 'Chennai, India',
-      href: '#'
-    }
-  ]
-
-  const socials = [
-    
-    {
-      icon: Linkedin,
-      href: 'https://linkedin.com/in/piyush-maurya13',
-      label: 'LinkedIn'
-    },
-    {
-      icon: Github,
-      href: 'https://github.com/sick232',
-      label: 'GitHub'
-    }
-  ]
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Heading Animation
-      const titleElement =
-        sectionRef.current?.querySelector('.title-scale')
-
-      if (titleElement) {
-        gsap.fromTo(
-          titleElement,
-          {
-            scale: 0.1,
-            opacity: 0,
-            y: 100
-          },
-          {
-            scale: 1,
-            opacity: 1,
-            y: 0,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 85%',
-              end: 'top 30%',
-              scrub: 1
-            }
-          }
-        )
-      }
-
-      // Form Animation
-      gsap.fromTo(
-        formRef.current,
-        { opacity: 0, scale: 0.95 },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.8,
-          ease: 'back.out(1.7)',
-          scrollTrigger: {
-            trigger: formRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
-        }
-      )
-
-      // Form Fields Animation
-      gsap.fromTo(
-        formRef.current?.querySelectorAll('.form-field') || [],
-        { opacity: 0, x: -30 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: formRef.current,
-            start: 'top 75%',
-            toggleActions: 'play none none none'
-          }
-        }
-      )
-
-      // Contact Info Animation
-      gsap.fromTo(
-        infoRef.current?.children || [],
-        { opacity: 0, x: 30 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: infoRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
-        }
-      )
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
-
   // SEND EMAIL
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     setIsSubmitting(true)
-
-    console.log(SERVICE_ID)
-    console.log(TEMPLATE_ID)
-    console.log(PUBLIC_KEY)
 
     try {
       await emailjs.send(
@@ -178,7 +51,7 @@ const Contact = () => {
         PUBLIC_KEY
       )
 
-      toast.success('Message sent successfully!')
+      toast.success("Message sent — I'll get back to you soon.")
 
       setFormData({
         name: '',
@@ -187,16 +60,14 @@ const Contact = () => {
       })
     } catch (error) {
       console.error(error)
-      toast.error('Failed to send message.')
+      toast.error(`Failed to send. Please email me directly at ${profile.email}.`)
     }
 
     setIsSubmitting(false)
   }
 
   // HANDLE INPUT CHANGE
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value
@@ -204,178 +75,141 @@ const Contact = () => {
   }
 
   return (
-    <section
-      id="contact"
-      ref={sectionRef}
-      className="relative py-16 md:py-24 overflow-hidden"
-    >
-      {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#d3d8da]/5 to-[#161616] pointer-events-none" />
+    <section id="contact" className="section-padding relative overflow-hidden">
+      <div className="pointer-events-none absolute bottom-0 left-1/2 h-[500px] w-[1000px] -translate-x-1/2 bg-[radial-gradient(closest-side,rgba(122,162,255,0.1),transparent)]" />
 
-      <div className="container-custom relative z-10">
-        {/* Header */}
-        <div ref={headingRef} className="text-center mb-16 md:mb-24">
-          <span className="font-body text-xs tracking-[0.3em] uppercase text-[#d3d8da]/50 mb-4 block">
-            Get In Touch
-          </span>
+      <div className="container-custom relative">
+        <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
+          {/* Intro + info */}
+          <div>
+            <span className="eyebrow slide-in">Contact</span>
+            <h2 className="slide-in mt-5 font-display text-4xl font-bold text-white md:text-5xl">
+              Let&apos;s build something together.
+            </h2>
+            <p className="slide-in mt-5 max-w-md text-base leading-relaxed text-zinc-400 md:text-lg">
+              I&apos;m currently looking for opportunities in AI, software engineering and full-stack
+              development. Whether you have a role, a project or just want to connect — my inbox is
+              open.
+            </p>
 
-          <h2 className="title-scale font-display text-4xl md:text-5xl lg:text-7xl font-bold text-[#d3d8da] mb-6 origin-center">
-            LET&apos;S <span className="text-white">TALK</span>
-          </h2>
+            <div className="slide-in mt-10 space-y-3">
+              {contactInfo.map(({ icon: Icon, label, value, href }) => {
+                const content = (
+                  <>
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-400 transition-colors group-hover:text-brand">
+                      <Icon className="h-4 w-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="block font-mono text-[11px] uppercase tracking-wider text-zinc-500">
+                        {label}
+                      </span>
+                      <span className="block truncate text-sm text-zinc-200 transition-colors group-hover:text-white">
+                        {value}
+                      </span>
+                    </div>
+                  </>
+                )
 
-          <p className="font-body text-base md:text-lg text-[#d3d8da]/60 max-w-2xl mx-auto">
-            Have a project in mind or just want to say hi? I&apos;d love to
-            hear from you. Let&apos;s create something amazing together.
-          </p>
-        </div>
-
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
-          {/* CONTACT FORM */}
-          <form
-            ref={formRef}
-            onSubmit={handleSubmit}
-            className="space-y-6"
-          >
-            {/* Name */}
-            <div className="form-field">
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                placeholder="Your Name"
-                className="w-full px-0 py-4 bg-transparent border-b border-[#d3d8da]/20 text-[#d3d8da] font-body focus:outline-none focus:border-[#d3d8da] transition-colors placeholder:text-[#d3d8da]/30"
-              />
+                return href ? (
+                  <a key={label} href={href} className="group flex items-center gap-4">
+                    {content}
+                  </a>
+                ) : (
+                  <div key={label} className="group flex items-center gap-4">
+                    {content}
+                  </div>
+                )
+              })}
             </div>
 
-            {/* Email */}
-            <div className="form-field">
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                placeholder="Your Email"
-                className="w-full px-0 py-4 bg-transparent border-b border-[#d3d8da]/20 text-[#d3d8da] font-body focus:outline-none focus:border-[#d3d8da] transition-colors placeholder:text-[#d3d8da]/30"
-              />
+            <div className="slide-in mt-10 flex flex-wrap gap-3">
+              {socials.map(({ icon: Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-secondary !px-4 !py-2"
+                >
+                  <Icon className="h-4 w-4" />
+                  {label}
+                  <ArrowUpRight className="h-3.5 w-3.5 text-zinc-500" />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="card-surface slide-in space-y-5 p-6 md:p-8">
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label htmlFor="name" className="mb-2 block text-sm text-zinc-400">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  autoComplete="name"
+                  placeholder="Jane Doe"
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label htmlFor="email" className="mb-2 block text-sm text-zinc-400">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  autoComplete="email"
+                  placeholder="jane@company.com"
+                  className={inputClass}
+                />
+              </div>
             </div>
 
-            {/* Message */}
-            <div className="form-field">
+            <div>
+              <label htmlFor="message" className="mb-2 block text-sm text-zinc-400">
+                Message
+              </label>
               <textarea
                 id="message"
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
                 required
-                rows={5}
-                placeholder="Tell me about your project..."
-                className="w-full px-0 py-4 bg-transparent border-b border-[#d3d8da]/20 text-[#d3d8da] font-body focus:outline-none focus:border-[#d3d8da] transition-colors resize-none placeholder:text-[#d3d8da]/30"
+                rows={6}
+                placeholder="Tell me about the role or project..."
+                className={`${inputClass} resize-none`}
               />
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}
-              className="liquid-fill group relative w-full md:w-auto px-10 py-5 border border-[#d3d8da] rounded-full font-body text-sm tracking-wider uppercase text-[#d3d8da] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-3"
+              className="btn-primary group w-full disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? (
                 <>
-                  <span className="w-5 h-5 border-2 border-[#d3d8da]/30 border-t-[#d3d8da] rounded-full animate-spin" />
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-ink-950/30 border-t-ink-950" />
                   Sending...
                 </>
               ) : (
                 <>
                   Send Message
-                  <Send className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  <Send className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </>
               )}
             </button>
           </form>
-
-          {/* CONTACT INFO */}
-          <div ref={infoRef} className="space-y-8">
-            {/* Details */}
-            <div className="space-y-6">
-              <h3 className="font-display text-xl font-semibold text-[#d3d8da] mb-6">
-                Contact Information
-              </h3>
-
-              {contactInfo.map((item) => {
-                const Icon = item.icon
-
-                return (
-                  <a
-                    key={item.label}
-                    href={item.href}
-                    className="flex items-center gap-4 group"
-                  >
-                    <div className="w-12 h-12 rounded-full bg-[#d3d8da]/10 flex items-center justify-center group-hover:bg-[#d3d8da]/20 transition-colors">
-                      <Icon className="w-5 h-5 text-[#d3d8da]" />
-                    </div>
-
-                    <div>
-                      <span className="block font-body text-xs text-[#d3d8da]/50 uppercase tracking-wider">
-                        {item.label}
-                      </span>
-
-                      <span className="block font-body text-base text-[#d3d8da] group-hover:text-white transition-colors">
-                        {item.value}
-                      </span>
-                    </div>
-                  </a>
-                )
-              })}
-            </div>
-
-            {/* Social Links */}
-            <div className="pt-8 border-t border-[#d3d8da]/10">
-              <h3 className="font-display text-xl font-semibold text-[#d3d8da] mb-6">
-                Connect With Me
-              </h3>
-
-              <div className="flex gap-4">
-                {socials.map((social) => {
-                  const Icon = social.icon
-
-                  return (
-                    <a
-                      key={social.label}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-12 h-12 rounded-full bg-[#d3d8da]/10 flex items-center justify-center hover:bg-[#d3d8da] hover:text-[#161616] transition-all duration-300"
-                      aria-label={social.label}
-                    >
-                      <Icon className="w-5 h-5" />
-                    </a>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Availability */}
-            <div className="p-6 rounded-2xl bg-[#d3d8da]/5 border border-[#d3d8da]/10">
-              <div className="flex items-center gap-3 mb-3">
-                <span className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-
-                <span className="font-body text-sm text-[#d3d8da]/60">
-                  Open to Work
-                </span>
-              </div>
-
-              <p className="font-body text-sm text-[#d3d8da]/70">
-                Recently completed my AI & Software Engineering Internship at DEAL–DRDO. 
-                Currently seeking opportunities in Artificial Intelligence, Software Engineering,
-                 and Full-Stack Development while building impactful real-world solutions.
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </section>

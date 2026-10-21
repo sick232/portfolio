@@ -1,300 +1,107 @@
-import { useEffect, useRef, useState } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { FileText } from 'lucide-react'
-import EarthNetwork from '../components/EarthNetwork'
+import { GraduationCap, Briefcase, Trophy, FileText, MapPin, Download } from 'lucide-react'
+import { profile } from '../data/profile'
 
-gsap.registerPlugin(ScrollTrigger)
+const facts = [
+  { icon: MapPin, label: 'Based in', value: profile.location },
+  { icon: Briefcase, label: 'Latest role', value: 'AI & SWE Intern, DEAL–DRDO' },
+  { icon: Trophy, label: 'Beyond code', value: 'Competitive chess, fitness, geopolitics' }
+]
 
 const About = () => {
-  const sectionRef = useRef<HTMLElement>(null)
-  const imageRef = useRef<HTMLDivElement>(null)
-  const headingRef = useRef<HTMLHeadingElement>(null)
-  const textRef = useRef<HTMLDivElement>(null)
-  const statsRef = useRef<HTMLDivElement>(null)
-
-  const [counters, setCounters] = useState({
-    years: 0,
-    projects: 0
-  })
-
-  const stats = [
-    {
-      key: 'years',
-      value: 13,
-      suffix: '+',
-      label: 'Projects Built'
-    },
-    {
-      key: 'projects',
-      value: 10,
-      suffix: '+',
-      label: 'Tech Skills'
-    }
-  ]
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Image reveal animation
-      gsap.fromTo(
-        imageRef.current,
-        { clipPath: 'inset(100% 0 0 0)' },
-        {
-          clipPath: 'inset(0% 0 0 0)',
-          duration: 1.2,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 70%',
-            toggleActions: 'play none none none'
-          }
-        }
-      )
-
-      // Heading stagger animation
-      gsap.fromTo(
-        headingRef.current?.querySelectorAll('.char') || [],
-        { y: '100%', opacity: 0 },
-        {
-          y: '0%',
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.02,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 70%',
-            toggleActions: 'play none none none'
-          }
-        }
-      )
-
-      // Paragraph animations
-      const paragraphs = gsap.utils.toArray(textRef.current?.children || [])
-
-      paragraphs.forEach((p: any) => {
-        gsap.fromTo(
-          p,
-          {
-            opacity: 0,
-            y: 50,
-            rotateX: -15,
-            scale: 0.95
-          },
-          {
-            opacity: 1,
-            y: 0,
-            rotateX: 0,
-            scale: 1,
-            duration: 1,
-            ease: 'back.out(1.2)',
-            scrollTrigger: {
-              trigger: p,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse'
-            }
-          }
-        )
-      })
-
-      // Counter animation
-      ScrollTrigger.create({
-        trigger: statsRef.current,
-        start: 'top 80%',
-        onEnter: () => {
-          stats.forEach((stat) => {
-            gsap.to(
-              {},
-              {
-                duration: 2,
-                ease: 'power2.out',
-                onUpdate: function () {
-                  const progress = this.progress()
-
-                  setCounters((prev) => ({
-                    ...prev,
-                    [stat.key]: Math.floor(stat.value * progress)
-                  }))
-                }
-              }
-            )
-          })
-        },
-        once: true
-      })
-
-      // Stats animation
-      gsap.fromTo(
-        statsRef.current?.children || [],
-        { opacity: 0, scale: 0.8 },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 1,
-          stagger: 0.1,
-          ease: 'back.out(1.7)',
-          scrollTrigger: {
-            trigger: statsRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
-        }
-      )
-
-      // Parallax image effect
-      gsap.to(imageRef.current, {
-        y: -100,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: true
-        }
-      })
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
-
-  const splitText = (text: string) => {
-    return text.split('').map((char, i) => (
-      <span
-        key={i}
-        className="char inline-block"
-        style={{ display: 'inline-block' }}
-      >
-        {char === ' ' ? '\u00A0' : char}
-      </span>
-    ))
-  }
-
   return (
-    <section
-      id="about"
-      ref={sectionRef}
-      className="relative py-32 md:py-40 overflow-hidden"
-    >
+    <section id="about" className="section-padding relative">
       <div className="container-custom">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
-          {/* Left Column */}
-          <div className="lg:sticky lg:top-32">
-            {/* Section Label */}
-            <span className="font-body text-xs tracking-[0.3em] uppercase text-[#d3d8da]/50 mb-6 block">
-              About Me
-            </span>
-
-            {/* Heading */}
-            <h2
-              ref={headingRef}
-              className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-[#d3d8da] mb-8 overflow-hidden"
-            >
-              <span className="block overflow-hidden">
-                {splitText('BUILDING')}
-              </span>
-
-              <span className="block overflow-hidden text-white">
-                {splitText('INTELLIGENT')}
-              </span>
-
-              <span className="block overflow-hidden">
-                {splitText('SYSTEMS')}
-              </span>
+        <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr] lg:gap-20">
+          {/* Story */}
+          <div>
+            <span className="eyebrow slide-in">About</span>
+            <h2 className="slide-in mt-5 font-display text-4xl font-bold text-white md:text-5xl">
+              Building intelligent systems
+              <span className="text-zinc-500"> that solve real problems.</span>
             </h2>
 
-            {/* Description */}
-            <div
-              ref={textRef}
-              className="space-y-6 mb-12"
-              style={{ perspective: '1000px' }}
-            >
-              <p className="font-body text-base md:text-lg text-[#d3d8da]/70 leading-relaxed">
-                I am a B.Tech Computer Science student specializing in AI & Robotics at VIT Chennai. 
-                I enjoy building AI-powered applications that solve real-world problems using Machine 
-                Learning, Retrieval-Augmented Generation (RAG), and Full-Stack Development.
+            <div className="mt-8 space-y-5 text-base leading-relaxed text-zinc-400 md:text-lg">
+              <p className="slide-in">
+                I&apos;m a B.Tech Computer Science student specializing in{' '}
+                <span className="text-zinc-200">AI & Robotics</span> at VIT Chennai. I enjoy building
+                AI-powered applications that solve real-world problems using Machine Learning,
+                Retrieval-Augmented Generation (RAG), and full-stack development.
               </p>
-
-              <p className="font-body text-base md:text-lg text-[#d3d8da]/70 leading-relaxed">
-                Recently, I completed my AI & Software Engineering Internship at DEAL–DRDO, 
-                where I developed DAPS (Defence Acquisition & Procurement System)—an AI-based information retrieval platform for defence procurement documents.
+              <p className="slide-in">
+                Most recently I completed an AI & Software Engineering internship at{' '}
+                <span className="text-zinc-200">DEAL–DRDO</span>, where I developed DAPS (Defence
+                Acquisition & Procurement System) — an AI-based information retrieval platform for
+                defence procurement documents.
               </p>
-
-              <p className="font-body text-base md:text-lg text-[#d3d8da]/70 leading-relaxed">
-                When I’m not coding, you’ll find me playing competitive chess,
-                staying active through fitness and physical training, reading
+              <p className="slide-in">
+                When I&apos;m not coding, you&apos;ll find me playing competitive chess, training, reading
                 non-fiction, or exploring geopolitics.
               </p>
             </div>
 
-            {/* Education */}
-            <div className="mb-8 p-6 rounded-lg bg-[#d3d8da]/5">
-              <span className="font-body text-xs tracking-[0.2em] uppercase text-[#d3d8da]/50 mb-2 block">
-                Education
-              </span>
-
-              <h3 className="font-display text-lg font-semibold text-[#d3d8da]">
-                B.Tech in Computer Science & Engineering
-              </h3>
-
-              <p className="font-body text-sm text-[#d3d8da]/60">
-                AI & Robotics Specialization
-              </p>
-
-              <p className="font-body text-sm text-[#d3d8da]/50 mt-1">
-                Vellore Institute of Technology (VIT), Chennai
-              </p>
-
-              <p className="font-body text-xs text-[#d3d8da]/40 mt-1">
-                2023 - Present | Expected Graduation: August 2027
-              </p>
-            </div>
-
-            {/* Stats + Resume */}
-            <div ref={statsRef} className="grid grid-cols-2 gap-6">
-              {stats.map((stat) => (
-                <div
-                  key={stat.key}
-                  className="text-center p-4 rounded-lg bg-[#d3d8da]/5 hover:bg-[#d3d8da]/10 transition-colors"
-                >
-                  <div className="font-display text-3xl md:text-4xl font-bold text-white mb-1 counter-scramble">
-                    {counters[stat.key as keyof typeof counters]}
-                    {stat.suffix}
-                  </div>
-
-                  <div className="font-body text-xs text-[#d3d8da]/50 uppercase tracking-wider">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-
-              {/* Resume Button */}
-              <div className="col-span-2 flex justify-center mt-2">
-                <a
-                  href="https://drive.google.com/file/d/1A7JI7g7-lLgYQf94LMT4eaGyZGUTAxgt/view?usp=drive_link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-3 px-6 py-4 rounded-full bg-[#d3d8da]/10 hover:bg-[#d3d8da] text-[#d3d8da] hover:text-[#161616] transition-all duration-300 border border-[#d3d8da]/10 hover:scale-105"
-                >
-                  <FileText className="w-5 h-5 transition-transform duration-300 group-hover:rotate-6" />
-
-                  <span className="font-body text-sm tracking-wider uppercase">
-                    View Resume
-                  </span>
-                </a>
-              </div>
+            <div className="slide-in mt-10 flex flex-wrap gap-3">
+              <a href={profile.resumeUrl} download={profile.resumeFileName} className="btn-primary group">
+                <Download className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
+                Download Resume
+              </a>
+              <a
+                href={profile.resumeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary"
+              >
+                <FileText className="h-4 w-4" />
+                View Resume
+              </a>
             </div>
           </div>
 
-          {/* Right Column */}
-          <div className="relative h-full min-h-[500px] flex items-center justify-center lg:mt-0 mt-8">
-            <div
-              ref={imageRef}
-              className="relative w-full h-full min-h-[500px] rounded-lg overflow-hidden flex items-center justify-center"
-              style={{ clipPath: 'inset(100% 0 0 0)' }}
-            >
-              <EarthNetwork />
+          {/* Details */}
+          <div className="space-y-4 lg:pt-14">
+            <div className="card-surface slide-in p-6 md:p-7">
+              <div className="flex items-start gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand/10 text-brand">
+                  <GraduationCap className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="font-mono text-[11px] uppercase tracking-wider text-zinc-500">
+                    Education
+                  </p>
+                  <h3 className="mt-1 font-display text-lg font-semibold text-white">
+                    B.Tech, Computer Science & Engineering
+                  </h3>
+                  <p className="mt-1 text-sm text-zinc-400">
+                    Specialization in AI & Robotics
+                  </p>
+                  <p className="text-sm text-zinc-400">
+                    Vellore Institute of Technology, Chennai
+                  </p>
+                  <p className="mt-3 inline-flex rounded-full bg-white/[0.04] px-3 py-1 font-mono text-xs text-zinc-400">
+                    2023 – 2027 (expected)
+                  </p>
+                </div>
+              </div>
+            </div>
 
-              <div className="absolute inset-0 bg-gradient-to-t pointer-events-none" />
+            <div className="card-surface slide-in divide-y divide-white/[0.06]">
+              {facts.map(({ icon: Icon, label, value }) => (
+                <div key={label} className="flex items-center gap-4 px-6 py-4 md:px-7">
+                  <Icon className="h-4 w-4 shrink-0 text-zinc-500" />
+                  <span className="w-28 shrink-0 text-sm text-zinc-500">{label}</span>
+                  <span className="text-sm text-zinc-200">{value}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="slide-in grid grid-cols-2 gap-4">
+              <div className="card-surface p-6">
+                <p className="font-display text-3xl font-bold text-white">13+</p>
+                <p className="mt-1 text-sm text-zinc-500">Projects built</p>
+              </div>
+              <div className="card-surface p-6">
+                <p className="font-display text-3xl font-bold text-white">10+</p>
+                <p className="mt-1 text-sm text-zinc-500">Technologies</p>
+              </div>
             </div>
           </div>
         </div>

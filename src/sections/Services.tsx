@@ -1,202 +1,80 @@
-import { useEffect, useRef, useState } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { Brain, Code, Database, ArrowUpRight } from 'lucide-react'
+import { Brain, Code, Database } from 'lucide-react'
+import TiltCard from '../components/TiltCard'
+import TechSphere from '../components/TechSphere'
 
-gsap.registerPlugin(ScrollTrigger)
+const services = [
+  {
+    icon: Brain,
+    title: 'Machine Learning & AI',
+    description:
+      'Designing retrieval-augmented generation pipelines, NLP systems and LLM applications, and optimizing inference for production-ready AI.',
+    skills: ['Python', 'NLP', 'RAG Systems', 'LLMs', 'Deep Learning']
+  },
+  {
+    icon: Code,
+    title: 'Full-Stack Development',
+    description:
+      'Building scalable web applications end to end — from API design and backend services to polished, responsive frontends.',
+    skills: ['React', 'Next.js', 'FastAPI', 'Flask', 'Node.js', 'REST APIs', 'Tailwind CSS']
+  },
+  {
+    icon: Database,
+    title: 'Data & DevOps',
+    description:
+      'Designing databases, containerizing services and managing deployment pipelines for robust, maintainable infrastructure.',
+    skills: ['PostgreSQL', 'MongoDB', 'Firebase', 'Docker', 'Git', 'Linux']
+  }
+]
 
 const Services = () => {
-  const sectionRef = useRef<HTMLElement>(null)
-  const headingRef = useRef<HTMLDivElement>(null)
-  const cardsRef = useRef<HTMLDivElement>(null)
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-
-  const services = [
-    {
-      icon: Brain,
-      title: 'Machine Learning & AI',
-      description: 'Building intelligent systems using NLP, RAG systems, and deep learning. Experienced in designing retrieval-augmented generation pipelines and optimizing inference for production-ready AI applications.',
-      skills: ['Python', 'NLP', 'RAG Systems', 'LLMs', 'Deep Learning']
-    },
-    {
-      icon: Code,
-      title: 'Full-Stack Development',
-      description: 'Developing scalable web applications with modern frameworks. Proficient in both frontend and backend technologies, creating end-to-end solutions from concept to deployment.',
-      skills: ['React', 'Next.js', 'FastAPI', 'Flask', 'Node.js', 'REST APIs', 'Tailwind CSS']
-    },
-    {
-      icon: Database,
-      title: 'Database & DevOps',
-      description: 'Managing data systems and deployment pipelines. Skilled in database design, cloud services, and containerization for robust and scalable infrastructure.',
-      skills: ['PostgreSQL', 'MongoDB', 'Firebase', 'Docker', 'Git', 'Linux']
-    }
-  ]
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Heading animation
-      const titleElement = sectionRef.current?.querySelector('.title-scale')
-
-      if (titleElement) {
-        gsap.fromTo(titleElement,
-          { 
-            scale: 0.1, 
-            opacity: 0, 
-            y: 100 
-          },
-          {
-            scale: 1,
-            opacity: 1,
-            y: 0,
-            ease: "none",
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 85%',
-              end: 'top 30%',
-              scrub: 1,
-            }
-          }
-        )
-      }
-
-      // Cards stagger animation
-      gsap.fromTo(cardsRef.current?.children || [],
-        { opacity: 0, y: 50, rotateY: 15 },
-        {
-          opacity: 1,
-          y: 0,
-          rotateY: 0,
-          duration: 1,
-          stagger: 0.15,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: cardsRef.current,
-            start: 'top 75%',
-            toggleActions: 'play none none none'
-          }
-        }
-      )
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, index: number) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    })
-    setHoveredCard(index)
-  }
-
   return (
-    <section
-      id="services"
-      ref={sectionRef}
-      className="relative py-16 md:py-24 overflow-hidden"
-    >
-      {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#d3d8da]/5 to-transparent pointer-events-none" />
-
-      <div className="container-custom relative z-10">
-        {/* Section Header */}
-        <div ref={headingRef} className="text-center mb-16 md:mb-24">
-          <span className="font-body text-xs tracking-[0.3em] uppercase text-[#d3d8da]/50 mb-4 block">
-            What I Do
-          </span>
-          <h2 className="title-scale font-display text-4xl md:text-5xl lg:text-6xl font-bold text-[#d3d8da] mb-6 origin-center">
-            MY EXPERTISE
-          </h2>
-          <p className="font-body text-base md:text-lg text-[#d3d8da]/60 max-w-2xl mx-auto">
-            I specialize in AI/ML systems and full-stack development, bringing together 
-            cutting-edge research and practical engineering solutions.
-          </p>
+    <section id="services" className="section-padding relative border-y border-white/[0.05] bg-ink-900/40">
+      <div className="container-custom">
+        <div className="mb-14 flex items-center justify-between gap-10">
+          <div className="max-w-2xl">
+            <span className="eyebrow slide-in">Expertise</span>
+            <h2 className="slide-in mt-5 font-display text-4xl font-bold text-white md:text-5xl">
+              What I work with
+            </h2>
+            <p className="slide-in mt-5 text-base leading-relaxed text-zinc-400 md:text-lg">
+              I specialize in AI/ML systems and full-stack engineering — bringing research ideas into
+              practical, working software.
+            </p>
+          </div>
+          <div className="slide-in hidden shrink-0 lg:block lg:-my-16 lg:mr-8">
+            <TechSphere />
+          </div>
         </div>
 
-        {/* Service Cards */}
-        <div
-          ref={cardsRef}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
-          style={{ perspective: '1000px' }}
-        >
-          {services.map((service, index) => {
-            const Icon = service.icon
-            return (
-              <div
-                key={service.title}
-                className="group relative"
-                onMouseMove={(e) => handleMouseMove(e, index)}
-                onMouseLeave={() => setHoveredCard(null)}
-                style={{ transformStyle: 'preserve-3d' }}
-              >
-                <div
-                  className="relative p-8 md:p-10 rounded-2xl bg-[#1a1a1a] border border-[#d3d8da]/10 overflow-hidden transition-all duration-500 hover:border-[#d3d8da]/30 hover:-translate-y-2"
-                  style={{
-                    transform: hoveredCard === index
-                      ? 'translateZ(30px)'
-                      : 'translateZ(0)'
-                  }}
-                >
-                  {/* Glow Effect */}
-                  {hoveredCard === index && (
-                    <div
-                      className="absolute inset-0 opacity-30 pointer-events-none transition-opacity duration-300"
-                      style={{
-                        background: `radial-gradient(300px circle at ${mousePos.x}px ${mousePos.y}px, rgba(211, 216, 218, 0.15), transparent 50%)`
-                      }}
-                    />
-                  )}
-
-                  {/* Icon */}
-                  <div className="relative mb-6">
-                    <div className="w-14 h-14 rounded-xl bg-[#d3d8da]/10 flex items-center justify-center group-hover:bg-[#d3d8da]/20 transition-colors">
-                      <Icon className="w-6 h-6 text-[#d3d8da]" />
-                    </div>
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {services.map(({ icon: Icon, title, description, skills }, index) => (
+            <div key={title} className="slide-in">
+              <TiltCard className="beam card-surface card-hover group flex h-full flex-col p-7 md:p-8">
+                <div className="depth-2 mb-6 flex items-center justify-between">
+                  {/* Icon spins a full turn in 3D when the card is hovered */}
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-brand/20 bg-brand/10 text-brand shadow-[0_0_0_0_rgba(122,162,255,0)] transition-[background-color,transform,box-shadow] duration-700 [transform:perspective(300px)_rotateY(0deg)] group-hover:bg-brand/15 group-hover:shadow-[0_0_24px_2px_rgba(122,162,255,0.25)] group-hover:[transform:perspective(300px)_rotateY(360deg)]">
+                    <Icon className="h-5 w-5" />
                   </div>
-
-                  {/* Content */}
-                  <h3 className="font-display text-xl md:text-2xl font-semibold text-[#d3d8da] mb-4">
-                    {service.title}
-                  </h3>
-                  <p className="font-body text-sm md:text-base text-[#d3d8da]/60 mb-6 leading-relaxed">
-                    {service.description}
-                  </p>
-
-                  {/* Skills */}
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {service.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="px-3 py-1 text-xs font-body text-[#d3d8da]/70 bg-[#d3d8da]/10 rounded-full"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Link */}
-                  <a
-                    href="#works"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      document.querySelector('#works')?.scrollIntoView({ behavior: 'smooth' })
-                    }}
-                    className="inline-flex items-center gap-2 font-body text-sm text-[#d3d8da]/80 hover:text-white transition-colors group/link"
-                  >
-                    View Projects
-                    <ArrowUpRight className="w-4 h-4 transition-transform group-hover/link:translate-x-1 group-hover/link:-translate-y-1" />
-                  </a>
-
-                  {/* Glass Edge Effect */}
-                  <div className="absolute inset-0 rounded-2xl pointer-events-none">
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#d3d8da]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  </div>
+                  <span className="font-mono text-xs text-zinc-600 transition-colors duration-300 group-hover:text-brand">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
                 </div>
-              </div>
-            )
-          })}
+
+                <h3 className="depth-1 font-display text-xl font-semibold text-white">{title}</h3>
+                <p className="mt-3 flex-1 text-sm leading-relaxed text-zinc-400 md:text-[15px]">
+                  {description}
+                </p>
+
+                <div className="depth-1 mt-6 flex flex-wrap gap-2 border-t border-white/[0.06] pt-6">
+                  {skills.map((skill, i) => (
+                    <span key={skill} className="chip chip-wave" style={{ '--i': i } as React.CSSProperties}>
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </TiltCard>
+            </div>
+          ))}
         </div>
       </div>
     </section>

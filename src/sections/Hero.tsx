@@ -1,211 +1,277 @@
-import { useEffect, useRef } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
-import { ArrowDown, Github, Linkedin, FileText } from 'lucide-react'
+import { ArrowRight, Github, Linkedin, Download, Mail } from 'lucide-react'
+const EarthNetwork = lazy(() => import('../components/EarthNetwork'))
+import { profile } from '../data/profile'
+import { scrollToSection } from '../lib/smoothScroll'
 
-interface HeroProps {
-  isLoaded: boolean
-}
+// Front shows the headline stat; the back (revealed by a 3D flip) shows a detail
+const highlights = [
+  { value: 'DRDO', label: 'AI & SWE Intern', backValue: '2026', backLabel: 'DEAL, Dehradun' },
+  { value: '13+', label: 'Projects Built', backValue: 'GitHub', backLabel: '@sick232' },
+  { value: 'VIT', label: 'B.Tech CSE, AI & Robotics', backValue: '2027', backLabel: 'Graduating, Chennai' }
+]
 
-const Hero = ({ isLoaded }: HeroProps) => {
-  const heroRef = useRef<HTMLDivElement>(null)
-  const imageRef = useRef<HTMLDivElement>(null)
-  const headingRef = useRef<HTMLHeadingElement>(null)
-  const subheadingRef = useRef<HTMLParagraphElement>(null)
-  const ctaRef = useRef<HTMLDivElement>(null)
-  const socialsRef = useRef<HTMLDivElement>(null)
+const socials = [
+  { icon: Github, href: profile.githubUrl, label: 'GitHub' },
+  { icon: Linkedin, href: profile.linkedinUrl, label: 'LinkedIn' },
+  { icon: Mail, href: `mailto:${profile.email}`, label: 'Email' }
+]
+
+// Splits a word into letters that can each rotate in 3D
+const SplitWord = ({ word }: { word: string }) => (
+  <span className="inline-block whitespace-nowrap [transform-style:preserve-3d]">
+    {word.split('').map((char, i) => (
+      <span key={i} className="hero-char inline-block [transform-style:preserve-3d]">
+        {char}
+      </span>
+    ))}
+  </span>
+)
+
+const Hero = () => {
+  const heroRef = useRef<HTMLElement>(null)
+  const tiltLayerRef = useRef<HTMLDivElement>(null)
+  const [flipped, setFlipped] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!isLoaded) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const hero = heroRef.current
+    const tiltLayer = tiltLayerRef.current
+
+    // Tilt the visual toward the cursor so its layers separate in depth.
+    // overwrite: 'auto' replaces the previous tween instead of stacking a new one per mousemove.
+    const handleMouseMove = (e: MouseEvent) => {
+      gsap.to(tiltLayer, {
+        rotateY: (e.clientX / window.innerWidth - 0.5) * 22,
+        rotateX: -(e.clientY / window.innerHeight - 0.5) * 22,
+        duration: 0.9,
+        ease: 'power3.out',
+        overwrite: 'auto'
+      })
+    }
+    if (window.matchMedia('(pointer: fine)').matches) {
+      hero?.addEventListener('mousemove', handleMouseMove)
+    }
+
+    // Pause the hero's looping CSS animations (grid floor, ring, chips) while it is off screen
+    const visibility = new IntersectionObserver(([entry]) => {
+      hero?.classList.toggle('is-offscreen', !entry.isIntersecting)
+    })
+    if (hero) visibility.observe(hero)
+
+    // Spin a letter of the name a full turn when the cursor touches it
+    const handleCharEnter = (e: Event) => {
+      const char = e.currentTarget as HTMLElement
+      if (gsap.isTweening(char)) return
+      gsap.fromTo(char, { rotateX: 0 }, { rotateX: 360, duration: 0.9, ease: 'power3.out' })
+    }
+    const chars = hero ? Array.from(hero.querySelectorAll<HTMLElement>('.hero-char')) : []
+    if (window.matchMedia('(hover: hover)').matches) {
+      chars.forEach((char) => char.addEventListener('mouseenter', handleCharEnter))
+    }
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.3 })
-
-      // Image circular reveal
-      tl.fromTo(imageRef.current,
-        { clipPath: 'circle(0% at 50% 50%)' },
-        { clipPath: 'circle(100% at 50% 50%)', duration: 1.4, ease: 'power3.out' }
+      // Letters of the name flip up into place in 3D on load
+      gsap.fromTo(
+        chars,
+        { opacity: 0, rotateX: -100, y: 20, transformOrigin: '50% 100% -30px' },
+        { opacity: 1, rotateX: 0, y: 0, duration: 1, stagger: 0.04, ease: 'back.out(1.7)', delay: 0.25 }
       )
-
-      // Heading 3D rotation reveal
-      tl.fromTo(headingRef.current?.querySelectorAll('.char') || [],
-        { opacity: 0, rotateX: 90, y: 50 },
-        { opacity: 1, rotateX: 0, y: 0, duration: 1, stagger: 0.03, ease: 'power3.out' },
-        '-=0.8'
+      gsap.fromTo(
+        '.hero-item',
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0, duration: 0.8, stagger: 0.08, ease: 'power3.out', delay: 0.1 }
       )
-
-      // Subheading blur fade
-      tl.fromTo(subheadingRef.current,
-        { opacity: 0, filter: 'blur(10px)' },
-        { opacity: 1, filter: 'blur(0px)', duration: 0.8, ease: 'none' },
-        '-=0.4'
+      gsap.fromTo(
+        '.hero-visual',
+        { opacity: 0, scale: 0.94 },
+        { opacity: 1, scale: 1, duration: 1.2, ease: 'power3.out', delay: 0.3 }
       )
-
-      // CTA buttons
-      tl.fromTo(ctaRef.current?.children || [],
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out' },
-        '-=0.3'
-      )
-
-      // Socials
-      tl.fromTo(socialsRef.current?.children || [],
-        { opacity: 0, x: -20 },
-        { opacity: 1, x: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out' },
-        '-=0.4'
-      )
-
-      // Parallax scroll effect for image
-      gsap.to(imageRef.current, {
-        y: 200,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true
-        }
-      })
-
-      // Heading dissolve on scroll
-      gsap.to(headingRef.current, {
-        opacity: 0,
-        letterSpacing: '50px',
-        ease: 'none',
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: 'top top',
-          end: '50% top',
-          scrub: true
-        }
-      })
     }, heroRef)
 
-    return () => ctx.revert()
-  }, [isLoaded])
-
-  // Split text into characters
-  const splitText = (text: string) => {
-    return text.split('').map((char, i) => (
-      <span
-        key={i}
-        className="char inline-block"
-        style={{ transformStyle: 'preserve-3d' }}
-      >
-        {char === ' ' ? '\u00A0' : char}
-      </span>
-    ))
-  }
-
-  const scrollToAbout = () => {
-    document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' })
-  }
+    return () => {
+      hero?.removeEventListener('mousemove', handleMouseMove)
+      chars.forEach((char) => char.removeEventListener('mouseenter', handleCharEnter))
+      visibility.disconnect()
+      gsap.killTweensOf(tiltLayer)
+      ctx.revert()
+    }
+  }, [])
 
   return (
     <section
       ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative flex min-h-[100svh] items-center overflow-hidden pt-24 pb-16 sm:pt-28"
     >
-      {/* Background Image Layer */}
-      <div
-        ref={imageRef}
-        className="absolute inset-0 z-0"
-        style={{ clipPath: 'circle(0% at 50% 50%)' }}
-      >
-        <img
-          src="/hero-portrait.jpg"
-          alt="Hero Portrait"
-          className="w-full h-full object-cover scale-100"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#161616]/60 via-[#161616]/40 to-[#161616]" />
+      {/* Background */}
+      <div className="pointer-events-none absolute inset-0 bg-grid opacity-60" />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="grid-floor" />
+        <div className="grid-floor-fade" />
       </div>
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-[700px] w-[1100px] -translate-x-1/2 bg-[radial-gradient(closest-side,rgba(122,162,255,0.14),transparent)]" />
 
-      {/* Content Layer */}
-      <div className="relative z-10 container-custom pt-32 pb-20">
-        <div className="flex flex-col items-center text-center">
-          {/* Main Heading */}
-          <h1
-            ref={headingRef}
-            className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold text-white leading-none tracking-tight mb-6"
-            style={{ perspective: '1000px' }}
-          >
-            <span className="block">{splitText('HI, I\'M')}</span>
-            <span className="block text-[#d3d8da]">{splitText('PIYUSH')}</span>
-            <span className="block text-[#d3d8da]">{splitText('MAURYA')}</span>
-          </h1>
+      <div className="container-custom relative z-10">
+        <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-8">
+          {/* Content */}
+          <div className="hero-content">
+            <div className="hero-item mb-8 inline-flex items-center gap-2.5 rounded-full border border-emerald-400/20 bg-emerald-400/[0.06] px-3.5 py-1.5">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+              </span>
+              <span className="text-xs font-medium text-emerald-300">
+                Open to AI & Software Engineering roles
+              </span>
+            </div>
 
-          {/* Subheading */}
-          <p
-            ref={subheadingRef}
-            className="font-body text-lg md:text-xl lg:text-2xl text-[#d3d8da]/80 max-w-2xl mb-10 opacity-0"
-          >
-          Computer Science Engineer Specializing in AI & Robotics
-          </p>
+            <p className="hero-item mb-4 font-mono text-sm text-brand">
+              Hi, I&apos;m
+            </p>
 
-          {/* CTA Buttons */}
-          <div ref={ctaRef} className="flex flex-col sm:flex-row gap-4 mb-16">
-            <button
-              onClick={scrollToAbout}
-              className="liquid-fill px-8 py-4 border border-[#d3d8da] rounded-full font-body text-sm tracking-wider uppercase transition-all duration-300"
+            <h1
+              className="font-display text-[2.75rem] font-bold leading-[1.02] text-white sm:text-6xl lg:text-7xl"
+              style={{ perspective: '600px' }}
+              aria-label={profile.name}
             >
-              Explore My Work
-            </button>
-            <a
-              href="#contact"
-              onClick={(e) => {
-                e.preventDefault()
-                document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })
-              }}
-              className="px-8 py-4 bg-[#d3d8da] text-[#161616] rounded-full font-body text-sm tracking-wider uppercase hover:bg-white transition-colors"
-            >
-              Get In Touch
-            </a>
+              <span aria-hidden="true">
+                {profile.name.split(' ').map((word, i) => (
+                  <span key={word}>
+                    {i > 0 && ' '}
+                    <SplitWord word={word} />
+                  </span>
+                ))}
+              </span>
+            </h1>
+
+            <h2 className="hero-item mt-4 font-display text-2xl font-semibold text-zinc-400 sm:text-3xl lg:text-4xl">
+              {profile.role}
+            </h2>
+
+            <p className="hero-item mt-6 max-w-xl text-base leading-relaxed text-zinc-400 md:text-lg">
+              {profile.tagline} Recently built <span className="text-zinc-200">DAPS</span>, an
+              AI-based procurement intelligence platform, at{' '}
+              <span className="text-zinc-200">DEAL–DRDO</span>.
+            </p>
+
+            {/* CTAs */}
+            <div className="hero-item mt-10 flex flex-col gap-3 sm:flex-row">
+              <a
+                href="#works"
+                onClick={(e) => {
+                  e.preventDefault()
+                  scrollToSection('#works')
+                }}
+                className="btn-primary group"
+              >
+                View My Work
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              </a>
+              <a
+                href={profile.resumeUrl}
+                download={profile.resumeFileName}
+                className="btn-secondary group"
+              >
+                <Download className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
+                Download Resume
+              </a>
+            </div>
+
+            {/* Socials */}
+            <div className="hero-item mt-8 flex items-center gap-2">
+              {socials.map(({ icon: Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith('http') ? '_blank' : undefined}
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  title={label}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/[0.08] text-zinc-400 transition-colors hover:border-white/20 hover:text-white"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+
+            {/* Highlights */}
+            <div className="hero-item mt-12 grid max-w-xl grid-cols-3 divide-x divide-white/[0.08] border-t border-white/[0.08] pt-6">
+              {highlights.map((item) => (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => setFlipped((current) => (current === item.value ? null : item.value))}
+                  className={`flip-card flex items-start px-3 text-left first:pl-0 sm:px-4 ${flipped === item.value ? 'is-flipped' : ''}`}
+                  aria-label={`${item.value}, ${item.label}. ${item.backValue}, ${item.backLabel}`}
+                >
+                  <span className="flip-inner">
+                    <span className="flip-face">
+                      <span className="block font-display text-xl font-bold text-white sm:text-2xl md:text-3xl">
+                        {item.value}
+                      </span>
+                      <span className="mt-1 block text-xs leading-snug text-zinc-500 md:text-sm">
+                        {item.label}
+                      </span>
+                    </span>
+                    <span className="flip-face flip-back" aria-hidden="true">
+                      <span className="block font-display text-xl font-bold text-brand sm:text-2xl md:text-3xl">
+                        {item.backValue}
+                      </span>
+                      <span className="mt-1 block text-xs leading-snug text-zinc-400 md:text-sm">
+                        {item.backLabel}
+                      </span>
+                    </span>
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Scroll Indicator */}
-          <button
-            onClick={scrollToAbout}
-            className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[#d3d8da]/60 hover:text-[#d3d8da] transition-colors group"
+          {/* Visual */}
+          <div
+            className="hero-visual relative mx-auto aspect-square w-full max-w-[340px] sm:max-w-[520px]"
+            style={{ perspective: '1200px' }}
           >
-            <span className="font-body text-xs tracking-widest uppercase">Scroll</span>
-            <ArrowDown className="w-4 h-4 animate-bounce" />
-          </button>
-        </div>
-      </div>
+            <div className="absolute inset-0 [transform-style:preserve-3d]">
+              <div ref={tiltLayerRef} className="absolute inset-0 [transform-style:preserve-3d]">
+                {/* Depth layers: glow and rings sit behind the globe, chips float in front */}
+                <div className="absolute -inset-[5%] bg-[radial-gradient(closest-side,rgba(122,162,255,0.16),transparent)] [transform:translateZ(-120px)]" />
+                <div className="absolute inset-0 rounded-full border border-white/[0.06] [transform:translateZ(-60px)]" />
+                <div className="absolute inset-[8%] animate-[spin_60s_linear_infinite] rounded-full border border-dashed border-white/[0.08]" />
+                <Suspense fallback={null}>
+                  <EarthNetwork />
+                </Suspense>
 
-      {/* Social Links - Left Side */}
-      <div
-        ref={socialsRef}
-        className="hidden lg:flex fixed left-8 top-1/2 -translate-y-1/2 flex-col gap-6 z-20"
-      >
-        <a
-          href="https://drive.google.com/file/d/16EyCvSjCPZb_jmmha34zEi1wj-Zh4pi5/view?usp=sharing"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="Resume"
-          className="text-[#d3d8da]/60 hover:text-[#d3d8da] transition-colors"
-          aria-label="Resume"
-        >
-          <FileText className="w-5 h-5" />
-        </a>
-        <a
-          href="https://github.com/sick232"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-[#d3d8da]/60 hover:text-[#d3d8da] transition-colors"
-          aria-label="GitHub"
-        >
-          <Github className="w-5 h-5" />
-        </a>
-        <a
-          href="https://linkedin.com/in/piyush-maurya13"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-[#d3d8da]/60 hover:text-[#d3d8da] transition-colors"
-          aria-label="LinkedIn"
-        >
-          <Linkedin className="w-5 h-5" />
-        </a>
-        <div className="w-px h-20 bg-[#d3d8da]/20 mx-auto" />
+                {/* Tilted 3D orbits with satellites circling the globe */}
+                <div className="orbit inset-[14%] [transform:rotateX(72deg)_rotateY(-14deg)]">
+                  <div className="orbit-spin [animation-duration:14s]">
+                    <span className="orbit-dot" />
+                  </div>
+                </div>
+                <div className="orbit inset-[6%] [transform:rotateX(68deg)_rotateY(24deg)]">
+                  <div className="orbit-spin [animation-direction:reverse] [animation-duration:22s]">
+                    <span className="orbit-dot orbit-dot-sm" />
+                  </div>
+                </div>
+
+                <div className="absolute left-0 top-[18%] hidden [transform:translateZ(110px)] sm:block">
+                  <div className="animate-float rounded-xl border border-white/[0.08] bg-ink-900/95 px-4 py-3 shadow-2xl shadow-black/40">
+                    <p className="font-mono text-[11px] uppercase tracking-wider text-zinc-500">Focus</p>
+                    <p className="text-sm font-medium text-zinc-200">RAG · LLMs · NLP</p>
+                  </div>
+                </div>
+                <div className="absolute bottom-[16%] right-0 hidden [transform:translateZ(80px)] sm:block">
+                  <div className="animate-float rounded-xl border border-white/[0.08] bg-ink-900/95 px-4 py-3 shadow-2xl shadow-black/40 [animation-delay:-3s]">
+                    <p className="font-mono text-[11px] uppercase tracking-wider text-zinc-500">Stack</p>
+                    <p className="text-sm font-medium text-zinc-200">Python · FastAPI · React</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )
